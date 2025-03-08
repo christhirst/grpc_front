@@ -10,12 +10,12 @@ use crate::list::api::RootStoreFields;
 
 #[component]
 pub fn ListMeta() -> impl IntoView {
-    let (count, set_count) = signal(0);
-    let (t, tt) = signal(0);
+    let (_count, _set_count) = signal(0);
+    let (t, _tt) = signal(0);
     let async_data = Resource::new(
         move || t.get(),
         // every time `count` changes, this will run
-        |t| get(String::from("value")),
+        |_t| get(String::from("value")),
     );
     let u = Root {
         user_id: 1,
@@ -55,9 +55,8 @@ pub fn ListMeta() -> impl IntoView {
     });
 
     data.rows().write().push(pp);
-    let values = vec![0, 1, 2];
 
-    let oo = Root {
+    let _oo = Root {
         user_id: 3,
         id: 3,
         title: String::from("test"),
@@ -79,7 +78,7 @@ pub fn ListMeta() -> impl IntoView {
         // doubling its value
         <button on:click=move |_| {
             // allows iterating over the entries in an iterable store field
-            use reactive_stores::StoreFieldIterator;
+            //use reactive_stores::StoreFieldIterator;
 
             // calling rows() gives us access to the rows
             /* for row in data.rows().iter_unkeyed() {

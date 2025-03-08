@@ -34,3 +34,24 @@ nav {
  top: 50%; left: 0; bottom: 50%; right: 0;
   */
 }
+
+.card {
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  max-width: 300px;
+  margin: 20px auto;
+
+  .card-content {
+    p {
+      margin: 0 0 10px 0;
+      font-size: 16px;
+      color: #333333;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+}

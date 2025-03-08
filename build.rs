@@ -8,7 +8,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         .build_client(true)
         //.out_dir("./src")
         .file_descriptor_set_path(out_dir.join("rest_descriptor.bin"))
-        .compile(&["proto/rest.proto"], &["proto"])?;
+        .compile_protos(&["proto/rest.proto"], &["proto"])?;
 
     tonic_build::compile_protos("proto/rest.proto")?;
 

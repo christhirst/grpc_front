@@ -1,19 +1,13 @@
 use leptos::{prelude::ServerFnError, server};
 use reactive_stores::Store;
-use reqwest;
+//use reqwest;
 use serde::{Deserialize, Serialize};
-use serde_json::json;
-use std::error::Error;
 
 #[derive(Store, Debug, Clone)]
 pub struct Data {
     #[store(key: i64 = |row| row.id.clone())]
     pub rows: Vec<Root>,
 }
-/* pub mod backend {
-    include!("../backend.rs");
-    //tonic::include_proto!("../backend");
-} */
 
 #[derive(Store, Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -24,14 +18,6 @@ pub struct Root {
     pub title: String,
     pub completed: bool,
 }
-
-/* enum GrpcRequest {
-    View,
-    List,
-    Create,
-    Update,
-    Delete,
-} */
 
 #[server]
 pub async fn get(title: String) -> Result<Root, ServerFnError> {
