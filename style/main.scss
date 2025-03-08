@@ -1,0 +1,36 @@
+@import "navbar";
+
+
+
+body {
+	font-family: sans-serif;
+	text-align: center;
+}
+
+
+
+  .red {
+    color: red;
+  }
+  .flex-container {
+	display: flex;
+  }
+
+  $primary-color: #3498db;
+$font-stack: 'Helvetica, sans-serif';
+
+
+.gbi {
+	width: 40vw;
+	position: absolute;
+	flex: auto;
+}
+
+// Parameters
+
+nav {
+  /*
+ position: absolute;
+ top: 50%; left: 0; bottom: 50%; right: 0;
+  */
+}

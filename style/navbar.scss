@@ -1,0 +1,97 @@
+// Parameters
+
+$menuColor:#52b2ca;
+$subMenuColor:#9CE0C9;
+$height:40px;
+$lineHeight:40px;
+$fontSize:14px;
+$fontColor:#0E0500;
+$fontHoverColor:#666666;
+$menuWidth:1140px;
+$backgroundColor:#FFFCF6;
+$backgroundHoverColor:#F1F1F1;
+$duration:0.75s;
+
+body{
+    background-color:$backgroundColor;
+}
+
+
+ul.menu{
+    width: $menuWidth;
+    height:$height;
+    line-height:$lineHeight;
+ list-style-type: none;
+    position: relative;
+    text-align: center;
+    margin: auto; 
+    padding: auto;
+    background-color:$menuColor; 
+
+    li{
+        float: left;
+        width: auto;
+        a{
+            display: block;
+            width: auto;
+            text-decoration: none;
+        }
+    }
+    li:hover 
+    {
+        background-color:$subMenuColor;
+        -moz-transition-property: background-color;
+   -o-transition-property: background-color;
+   -webkit-transition-property: background-color;
+   transition-property: background-color;
+   -moz-transition-duration:$duration;
+   -o-transition-duration:$duration;
+   -webkit-transition-duration:$duration;
+   transition-duration:$duration;
+        
+        ul{
+            width: $menuWidth;
+            background: $subMenuColor;
+            visibility: visible; 
+     filter: progid:DXImageTransform.Microsoft.Alpha(enabled=false);
+     opacity: 1;
+     -moz-transition-property: opacity;
+     -o-transition-property: opacity;
+     -webkit-transition-property: opacity;
+     transition-property: opacity;
+     -moz-transition-duration:$duration;
+     -o-transition-duration:$duration;
+     -webkit-transition-duration:$duration;
+     transition-duration:$duration;
+        }
+    }
+}
+
+ul.sub-menu{
+    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
+ opacity: 0;
+    visibility: hidden;
+    display:block;
+    position: absolute;
+    left: 0;
+    height:$height;
+    line-height:$lineHeight;
+ list-style-type: none;
+    background-color:$subMenuColor; 
+    li:hover{
+        /*background-color:$backgroundHoverColor;*/
+    }
+}
+
+ul.menu,
+ul.sub-menu{
+    a{
+        font-family: Arial, Helvetica, sans-serif;
+   font-size:$fontSize;
+        color:$fontColor;
+        padding: 0 10px;
+    }
+  a:hover{
+    color:$fontHoverColor;
+  }
+}

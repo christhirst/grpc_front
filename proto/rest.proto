@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+
+package backend;
+
+service Restapi {
+    rpc IdpView (IdpRequest) returns (IdpResponse);
+}
+
+
+message IdpRequest {
+   string url = 1;
+ 
+ }
+ 
+
+message IdpResponse {
+   string metadataB64 = 1;
+   string metadataURL = 2;
+   string partnerType = 3;
+   string tenantName = 4;
+   string tenantURL = 5;
+   string partnerName = 6;
+   string nameIDFormat = 7;
+   string ssoProfile = 8;
+   string attributeLDAP = 9;
+   string attributeSAML = 10;
+   string faWelcomePage = 11;
+   string generateNewKeys = 12;
+   string validityNewKeys = 13;
+   bool preverify = 14;
+   string providerID = 15;
+   string ssoURL = 16;
+   string ssoSOAPURL = 17;
+   string logoutRequestURL = 18;
+   string logoutResponseURL = 19;
+   string assertionConsumerURL = 20;
+   string succinctID = 21;
+   string signingCert = 22;
+   string encryptionCert = 23;
+   string signatureDigestAlgorithm = 24;
+   string signingKeystoreAccessTemplateId = 25;
+   string encryptionKeystoreAccessTemplateId = 26;
+   string adminFedInstanceType = 27;
+}

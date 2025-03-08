@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+message undefined {
+   string name = 1;
+   string description = 2;
+   string idDomain = 3;
+   string id = 4;
+   string secret = 5;
+   string clientType = 6;
+  repeated string grantTypes = 7;
+  repeated undefined scopes = 8;
+   string usePKCE = 9;
+   string defaultScope = 10;
+  repeated undefined redirectURIs = 11;
+  repeated undefined attributes = 12;
+   string tokenEndpointAuthMethod = 13;
+   string issueTLSClientCertificateBoundAccessTokens = 14;
+   string tlsClientAuthSubjectDN = 15;
+   string tlsClientAuthSANDNS = 16;
+   string tlsClientAuthSANURI = 17;
+   string tlsClientAuthSANIP = 18;
+   string tlsClientAuthSANEmail = 19;
+  repeated string accessTokenCustomClaims = 20;
+  repeated string idTokenCustomClaims = 21;
+  repeated string userInfoCustomClaims = 22;
+   int32 oldSecretRetentionTimeInDays = 23;
+}
