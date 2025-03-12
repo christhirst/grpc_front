@@ -4,17 +4,56 @@ syntax = "proto3";
 package backend;
 
 service Restapi {
-    rpc IdpView (IdpRequest) returns (IdpResponse);
+    rpc IdpView (RequestName) returns (IDPPartner);
+    rpc IdpList (RequestList) returns (ResponseIdpList);
+    rpc IdpEdit (IDPPartner) returns (IDPPartner);
+    rpc IdpDelete (RequestName) returns (IDPPartner);
+
+    rpc SPView (RequestName) returns (SPPartner);
+    rpc SPList (RequestList) returns (ResponseSpList);
+    rpc SPEdit (SPPartner) returns (SPPartner);
+    rpc SpDelete (RequestName) returns (SPPartner);
+
+
+    rpc OidcView (RequestName) returns (OidcClient);
+    rpc OidcList (RequestList) returns (ResponseOidcList);
+    rpc OidcCreate (OidcClient) returns (OidcClient);
+    rpc OidcEdit (OidcClient) returns (OidcClient);
+    rpc OidcDelete (RequestName) returns (OidcClient);
+
+    rpc ResourceServerView (RequestName) returns (ResourceServer);
+    rpc ResourceServerList (RequestList) returns (ResponseResourceList);
+    rpc ResourceServerCreate (ResourceServer) returns (ResourceServer);
+    rpc ResourceServerEdit (ResourceServer) returns (ResourceServer);
+    rpc ResourceServerDelete (RequestName) returns (ResourceServer);
 }
 
 
-message IdpRequest {
-   string url = 1;
- 
+message RequestName {
+   string name = 1; 
  }
- 
 
-message IdpResponse {
+ message RequestList {
+   string regex = 1; 
+ }
+
+message ResponseIdpList {
+   repeated IDPPartner ListIdp = 1;
+}
+
+message ResponseSpList {
+   repeated SPPartner ListSp = 1;
+}
+
+ message ResponseOidcList {
+   repeated OidcClient ListOidc = 1;
+ }
+
+ message ResponseResourceList {
+   repeated ResourceServer ListResourceServer = 1;
+ }
+
+message IDPPartner {
    bytes metadataB64 = 1;
    string metadataURL = 2;
    string partnerType = 3;
@@ -45,7 +84,38 @@ message IdpResponse {
 }
 
 
-
+message SPPartner {
+    string metadataB64 = 1;
+    string metadataURL = 2;
+    string partnerType = 3;
+    string tenantName = 4;
+    string tenantURL = 5;
+    string partnerName = 6;
+    string nameIDFormat = 7;
+    string ssoProfile = 8;
+    string generateNewKeys = 9;
+    string validityNewKeys = 10;
+    string preverify = 11;
+    string providerID = 12;
+    string ssoURL = 13;
+    string ssoSOAPURL = 14;
+    string logoutRequestURL = 15;
+    string logoutResponseURL = 16;
+    string assertionConsumerURL = 17;
+    string signingCert = 18;
+    string encryptionCert = 19;
+    string lastNameAttrName = 20;
+    string firstNameAttrName = 21;
+    string userNameAttrName = 22;
+    string emailAttrName = 23;
+    string staticAttrName = 24;
+    string staticAttrValue = 25;
+    string customAttrsStr = 26;
+    string signatureDigestAlgorithm = 27;
+    string signingKeystoreAccessTemplateId = 28;
+    string encryptionKeystoreAccessTemplateId = 29;
+    string adminFedInstanceType = 30;
+ }
 
 message ResourceServer {
    string name = 1;
