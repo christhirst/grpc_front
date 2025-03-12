@@ -30,10 +30,11 @@ pub fn Oidc() -> impl IntoView {
     let _rq = GrpcRequest::List;
     let (_count, _set_count) = signal(0);
     let (t, _tt) = signal(0);
+
     let async_data = Resource::new(
         move || t.get(),
         // every time `count` changes, this will run
-        |_t| grpc_connector(GrpcRequest::List),
+        |_t| grpc_connector(GrpcRequest::List, vec![1]),
     );
     let u = vec![Root {
         user_id: 1,

@@ -15,7 +15,7 @@ message IdpRequest {
  
 
 message IdpResponse {
-   string metadataB64 = 1;
+   bytes metadataB64 = 1;
    string metadataURL = 2;
    string partnerType = 3;
    string tenantName = 4;
@@ -43,3 +43,49 @@ message IdpResponse {
    string encryptionKeystoreAccessTemplateId = 26;
    string adminFedInstanceType = 27;
 }
+
+
+
+
+message ResourceServer {
+   string name = 1;
+   string description = 2;
+   string idDomain = 3;
+   repeated string scopes = 4;
+  repeated string tokenAttributes = 5;
+}
+
+
+enum gt{
+   PASSWORD = 0;
+   REFRESH_TOKEN=1;
+   JWT_BEARER=2;
+   CLIENT_CREDENTIALS=3;
+   AUTHORIZATION_CODE=4;
+}
+
+message OidcClient {
+    string name = 1;
+    string description = 2;
+    string idDomain = 3;
+    string id = 4;
+    string secret = 5;
+    string clientType = 6;
+   repeated string gt = 7;
+   repeated string scopes = 8;
+    string usePKCE = 9;
+    string defaultScope = 10;
+   repeated string redirectURIs = 11;
+   repeated string attributes = 12;
+    string tokenEndpointAuthMethod = 13;
+    string issueTLSClientCertificateBoundAccessTokens = 14;
+    string tlsClientAuthSubjectDN = 15;
+    string tlsClientAuthSANDNS = 16;
+    string tlsClientAuthSANURI = 17;
+    string tlsClientAuthSANIP = 18;
+    string tlsClientAuthSANEmail = 19;
+   repeated string accessTokenCustomClaims = 20;
+   repeated string idTokenCustomClaims = 21;
+   repeated string userInfoCustomClaims = 22;
+    int32 oldSecretRetentionTimeInDays = 23;
+ }
