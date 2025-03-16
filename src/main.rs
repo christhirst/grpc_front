@@ -1,13 +1,9 @@
+use settings::Settings;
+pub mod settings;
 //use backend::{IdpRequest, IdpResponse};
 //use proto::restapt_service;
 
 //use backend::restapi_client;
-
-/* pub mod backend {
-    tonic::include_proto!("backend");
-} */
-
-//tonic::include_proto!("backend");
 
 #[derive(Debug, Default)]
 pub struct RestService;
@@ -15,6 +11,11 @@ pub struct RestService;
 #[cfg(feature = "ssr")]
 #[tokio::main]
 async fn main() {
+    let settings = Settings::new();
+
+    // Print out our settings
+    println!("{settings:?}");
+
     /* restapi_client::RestapiClient::connect("http://[::1]:8080")
     .await
     .unwrap(); */

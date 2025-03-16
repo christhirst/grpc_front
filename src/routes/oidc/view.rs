@@ -6,8 +6,10 @@ use crate::grpc::init::grpc_connector;
 use crate::grpc::init::Data;
 use crate::grpc::init::DataStoreFields;
 use crate::grpc::init::GrpcRequest;
-use crate::grpc::init::Root;
-use crate::grpc::init::RootStoreFields;
+//use crate::grpc::init::Root;
+//use crate::grpc::init::RootStoreFields;
+use crate::grpc::types_oidc::OidcClient;
+use crate::grpc::types_oidc::OidcClientStoreFields;
 
 /* fn load(async_data: Resource<Result<Vec<Root>>>) -> Vec<Root> {
     let u = vec![Root {
@@ -36,18 +38,28 @@ pub fn Oidc() -> impl IntoView {
         // every time `count` changes, this will run
         |_t| grpc_connector(GrpcRequest::List, vec![1]),
     );
-    let u = vec![Root {
-        user_id: 1,
-        id: 66,
-        title: String::from("test66"),
-        completed: true,
+    /*   let u = vec![Root {
+           user_id: 1,
+           id: 66,
+           title: String::from("test66"),
+           completed: true,
+       }];
+
+       let uee = vec![Root {
+           user_id: 2,
+           id: 22,
+           title: String::from("test2"),
+           completed: true,
+       }];
+    */
+    let tt = vec![OidcClient {
+        id: String::from("11"),
+        ..Default::default()
     }];
 
-    let uee = vec![Root {
-        user_id: 1,
-        id: 66,
-        title: String::from("test66"),
-        completed: true,
+    let t1 = vec![OidcClient {
+        id: String::from("222"),
+        ..Default::default()
     }];
 
     //let pp = async_data.get().unwrap_or(Ok(u.clone())).unwrap_or(u);
@@ -63,30 +75,30 @@ pub fn Oidc() -> impl IntoView {
 
     //let oo = get(todo!()).await;
     // instead of a single with the rows, we create a store for Data
-    let data = Store::new(Data { rows: u.clone() });
+    let data = Store::new(Data { rows: t1.clone() });
 
     //data.write().rows..set(pp[0].clone());
     //.write()..rows().write().push(pp[0].clone());
 
-    /* let oo = Root {
-        user_id: 3,
-        id: 3,
-        title: String::from("test"),
-        completed: true,
-    }; */
-
     view! {
 
-        <h1>OIDC</h1><BusyButton/>
+        <h1>OIDC</h1>
+        //<BusyButton/>
+
         <button on:click=move |_| {
+
             // allows iterating over the entries in an iterable store field
             //use reactive_stores::StoreFieldIterator;
 
-            let pp = async_data.get().unwrap_or(Ok(u.clone())).unwrap_or(uee.clone()).clone();
+            let pp = async_data.get().unwrap_or(Ok(tt.clone())).unwrap();
+            //.unwrap_or(tt.clone()).clone();
+
             data.set(Data { rows: pp });
         }>
             "Update OIDC Clients"
         </button>
+
+
 
         <h1>"My Data"</h1>
         <Suspense
@@ -101,11 +113,10 @@ pub fn Oidc() -> impl IntoView {
                 //<p>{move || child.title().get()}</p>
                 <div class="card">
                 <div class="card-content">
-                  <p>{move || child.id().get()}</p>
-                  <p>{move || child.title().get()}</p>
-                  <p>{move || child.user_id().get()}</p>
-                  <p>{move || child.title().get()}</p>
-                  <p>{move || child.completed().get()}</p>
+                  <p>{move || child.clone().id().get()}</p>
+                  //<p>{move || child.title().get()}</p>
+                  //<p>{move || child.user_id().get()}</p>
+                  //<p>{move || child.completed().get()}</p>
                 </div>
               </div>
 

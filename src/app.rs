@@ -43,6 +43,7 @@ pub fn App() -> impl IntoView {
                     <Route path=StaticSegment("/") view=HomePage/>
                     <Route path=StaticSegment("/metadata") view=ListMeta/>
                     <Route path=StaticSegment("/oidc") view=Oidc/>
+                    <Route path=StaticSegment("/rs") view=Oidc/>
                 </Routes>
 
 
@@ -242,9 +243,29 @@ fn NavBar() -> impl IntoView {
                 <li>
                     <a href="/oidc">OIDC</a>
                 </li>
+                <li>
+                    <a href="/rs">ResourceServer</a>
+                </li>
             </ul>
         </nav>
     }
+}
+
+#[component]
+fn ResourceServer() -> impl IntoView {
+    // Creates a reactive value to update the button
+    //logging::log!("where do I run?");
+    /* let count = RwSignal::new(0);
+    let on_click = move |_| *count.write() += 1;
+    view! {
+        <button on:click=on_click>"Click Me: " {count}{rr}</button>
+    } */
+
+    view! {
+    <h1>Home</h1>
+    //<BusyButton/>
+            //<button on:click=on_click>"Click Me: " {count}{rr}</button>
+        }
 }
 
 /* #[component]

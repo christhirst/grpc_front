@@ -4,16 +4,16 @@ syntax = "proto3";
 package backend;
 
 service Restapi {
-    rpc IdpView (RequestName) returns (IDPPartner);
+    rpc IdpView (RequestName) returns (IdpPartner);
     rpc IdpList (RequestList) returns (ResponseIdpList);
-    rpc IdpEdit (IDPPartner) returns (IDPPartner);
-    rpc IdpDelete (RequestName) returns (IDPPartner);
+    rpc IdpEdit (IdpPartner) returns (IdpPartner);
+    rpc IdpDelete (RequestName) returns (IdpPartner);
 
-    rpc SPView (RequestName) returns (SPPartner);
-    rpc SPList (RequestList) returns (ResponseSpList);
-    rpc SPEdit (SPPartner) returns (SPPartner);
-    rpc SpDelete (RequestName) returns (SPPartner);
-
+    rpc SpView (RequestName) returns (SpPartner);
+    rpc SpList (RequestList) returns (ResponseSpList);
+    rpc SpCreate (SpPartner) returns (SpPartner);
+    rpc SpEdit (SpPartner) returns (SpPartner);
+    rpc SpDelete (RequestName) returns (SpPartner);
 
     rpc OidcView (RequestName) returns (OidcClient);
     rpc OidcList (RequestList) returns (ResponseOidcList);
@@ -38,11 +38,11 @@ message RequestName {
  }
 
 message ResponseIdpList {
-   repeated IDPPartner ListIdp = 1;
+   repeated IdpPartner ListIdp = 1;
 }
 
 message ResponseSpList {
-   repeated SPPartner ListSp = 1;
+   repeated SpPartner ListSp = 1;
 }
 
  message ResponseOidcList {
@@ -53,7 +53,7 @@ message ResponseSpList {
    repeated ResourceServer ListResourceServer = 1;
  }
 
-message IDPPartner {
+message IdpPartner {
    bytes metadataB64 = 1;
    string metadataURL = 2;
    string partnerType = 3;
@@ -84,8 +84,8 @@ message IDPPartner {
 }
 
 
-message SPPartner {
-    string metadataB64 = 1;
+message SpPartner {
+    bytes metadataB64 = 1;
     string metadataURL = 2;
     string partnerType = 3;
     string tenantName = 4;
