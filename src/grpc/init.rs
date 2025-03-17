@@ -1,3 +1,4 @@
+//use backend::rest_request_client;
 use leptos::{prelude::ServerFnError, server};
 //use prost::bytes;
 use reactive_stores::Store;
@@ -40,15 +41,15 @@ pub async fn grpc_connector(
     bytes: Vec<u8>,
 ) -> Result<Vec<OidcClient>, ServerFnError> {
     println!("2222");
-    /* pub mod backend {
+    pub mod backend {
         //include!("../backend.rs");
         tonic::include_proto!("backend");
-    } */
-    //use backend::{restapi_client, IdpPartner, RequestList, RequestName, ResponseIdpList};
-    /* let mut client = restapi_client::RestapiClient::connect("http://[::1]:50051")
-           .await
-           .unwrap();
-    */
+    }
+    use backend::{rest_request_client, OidcListResponse};
+    let mut client = rest_request_client::RestRequestClient::connect("http://[::1]:50051")
+        .await
+        .unwrap();
+
     /*  let request = tonic::Request::new(RequestName {
         name: String::from("value"),
     }); */

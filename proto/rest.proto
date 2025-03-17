@@ -1,59 +1,58 @@
 syntax = "proto3";
 
-
 package backend;
 
-service Restapi {
-    rpc IdpView (RequestName) returns (IdpPartner);
-    rpc IdpList (RequestList) returns (ResponseIdpList);
-    rpc IdpEdit (IdpPartner) returns (IdpPartner);
-    rpc IdpDelete (RequestName) returns (IdpPartner);
+service RestRequest {
+    rpc ReSrList (ViewRequest) returns (ReSrListResponse);
+    rpc ReSrView (NameRequest) returns (ResourceServerPrt);
+    rpc ReSrCreate (ResourceServerPrt) returns (ResourceServerPrt);
+    rpc ReSrEdit (ResourceServerPrt) returns (ResourceServerPrt);
+    rpc ReSrDelete (NameRequest) returns (ResponseStatus);
 
-    rpc SpView (RequestName) returns (SpPartner);
-    rpc SpList (RequestList) returns (ResponseSpList);
-    rpc SpCreate (SpPartner) returns (SpPartner);
-    rpc SpEdit (SpPartner) returns (SpPartner);
-    rpc SpDelete (RequestName) returns (SpPartner);
+    rpc IdpList (ViewRequest) returns (IdpListResponse);
+    rpc IdpView (NameRequest) returns (IdpPartnerPrt);
+    rpc IdpCreate (IdpPartnerPrt) returns (IdpPartnerPrt);
+    rpc IdpEdit (IdpPartnerPrt) returns (IdpPartnerPrt);
+    rpc IdpDelete (NameRequest) returns (ResponseStatus); 
 
-    rpc OidcView (RequestName) returns (OidcClient);
-    rpc OidcList (RequestList) returns (ResponseOidcList);
-    rpc OidcCreate (OidcClient) returns (OidcClient);
-    rpc OidcEdit (OidcClient) returns (OidcClient);
-    rpc OidcDelete (RequestName) returns (OidcClient);
-
-    rpc ResourceServerView (RequestName) returns (ResourceServer);
-    rpc ResourceServerList (RequestList) returns (ResponseResourceList);
-    rpc ResourceServerCreate (ResourceServer) returns (ResourceServer);
-    rpc ResourceServerEdit (ResourceServer) returns (ResourceServer);
-    rpc ResourceServerDelete (RequestName) returns (ResourceServer);
+    rpc SpList (ViewRequest) returns (SPListResponse);
+    rpc SpView (NameRequest) returns (SpPartnerPrt);
+    rpc SpCreate (SpPartnerPrt) returns (SpPartnerPrt);
+    rpc SpEdit (SpPartnerPrt) returns (SpPartnerPrt);
+    rpc SpDelete (NameRequest) returns (ResponseStatus);
+ 
+    rpc OidcList (ViewRequest) returns (OidcListResponse);
+    rpc OidcView (NameRequest) returns (OidcClientPrt);
+    rpc OidcCreate (OidcClientPrt) returns (OidcClientPrt);
+    rpc OidcEdit (OidcClientPrt) returns (OidcClientPrt);
+    rpc OidcDelete (NameRequest) returns (ResponseStatus);
 }
 
-
-message RequestName {
-   string name = 1; 
- }
-
- message RequestList {
-   string regex = 1; 
- }
-
-message ResponseIdpList {
-   repeated IdpPartner ListIdp = 1;
+ 
+message  ResponseStatus {
+  string status = 1;
+  string message = 2;
 }
 
-message ResponseSpList {
-   repeated SpPartner ListSp = 1;
+ enum nameIDformat {
+  Emailaddress = 0;
+  Unspecified = 1;
+}
+  
+message ReSrListResponse {
+  repeated ResourceServerPrt ResourceServer = 1;
 }
 
- message ResponseOidcList {
-   repeated OidcClient ListOidc = 1;
- }
+ message IdpListResponse {
+  repeated IdpPartnerPrt IdpPartnerList = 1;
+}
 
- message ResponseResourceList {
-   repeated ResourceServer ListResourceServer = 1;
- }
+message SPListResponse {
+  repeated SpPartnerPrt SpPartnerList = 1;
 
-message IdpPartner {
+}
+
+message IdpPartnerPrt {
    bytes metadataB64 = 1;
    string metadataURL = 2;
    string partnerType = 3;
@@ -83,79 +82,107 @@ message IdpPartner {
    string adminFedInstanceType = 27;
 }
 
+message SpPartnerPrt {
+   bytes metadataB64 = 1;
+   string metadataURL = 2;
+   string partnerType = 3;
+   string tenantName = 4;
+   string tenantURL = 5;
+   string partnerName = 6;
+   string nameIDFormat = 7;
+   string ssoProfile = 8;
+   string generateNewKeys = 9;
+   string validityNewKeys = 10;
+   string preverify = 11;
+   string providerID = 12;
+   string ssoURL = 13;
+   string ssoSOAPURL = 14;
+   string logoutRequestURL = 15;
+   string logoutResponseURL = 16;
+   string assertionConsumerURL = 17;
+   string signingCert = 18;
+   string encryptionCert = 19;
+   string lastNameAttrName = 20;
+   string firstNameAttrName = 21;
+   string userNameAttrName = 22;
+   string emailAttrName = 23;
+   string staticAttrName = 24;
+   string staticAttrValue = 25;
+   string customAttrsStr = 26;
+   string signatureDigestAlgorithm = 27;
+   string signingKeystoreAccessTemplateId = 28;
+   string encryptionKeystoreAccessTemplateId = 29;
+   string adminFedInstanceType = 30;
+}
+ 
+message ViewRequest {
+  bool list = 1;
+  string name = 2;    
+}
 
-message SpPartner {
-    bytes metadataB64 = 1;
-    string metadataURL = 2;
-    string partnerType = 3;
-    string tenantName = 4;
-    string tenantURL = 5;
-    string partnerName = 6;
-    string nameIDFormat = 7;
-    string ssoProfile = 8;
-    string generateNewKeys = 9;
-    string validityNewKeys = 10;
-    string preverify = 11;
-    string providerID = 12;
-    string ssoURL = 13;
-    string ssoSOAPURL = 14;
-    string logoutRequestURL = 15;
-    string logoutResponseURL = 16;
-    string assertionConsumerURL = 17;
-    string signingCert = 18;
-    string encryptionCert = 19;
-    string lastNameAttrName = 20;
-    string firstNameAttrName = 21;
-    string userNameAttrName = 22;
-    string emailAttrName = 23;
-    string staticAttrName = 24;
-    string staticAttrValue = 25;
-    string customAttrsStr = 26;
-    string signatureDigestAlgorithm = 27;
-    string signingKeystoreAccessTemplateId = 28;
-    string encryptionKeystoreAccessTemplateId = 29;
-    string adminFedInstanceType = 30;
- }
+message NameRequest {
+  string name = 1;    
+}
 
-message ResourceServer {
+message RestResponse {
+    string confirmation = 1;
+}
+
+message OidcListResponse {
+  repeated OidcClientPrt OidcClients = 1;
+} 
+
+message VotingResponse {
+    string confirmation = 1;
+}
+
+message redirectURIs { 
+  string url = 1;
+  bool isHttps = 2;
+}
+
+message attributes {
+  string attrName = 1;
+  string attrValue = 2;
+  string attrType = 3;
+}
+ 
+message OidcClientPrt {
+   string name = 1;
+    string description = 2;
+   string idDomain = 3;
+   string identity_domain = 4;
+   string id = 5;
+   string secret = 6;
+   string clientType = 7;
+   repeated string grantTypes = 8;
+   repeated string scopes = 9;
+   string usePKCE = 10;
+   string defaultScope = 11;
+   repeated redirectURIs redirectURIs = 12;
+   repeated attributes attributes = 13;
+   string tokenEndpointAuthMethod = 14;
+   bool issueTLSClientCertificateBoundAccessTokens = 15;
+   string tlsClientAuthSubjectDN = 16;
+   string tlsClientAuthSANDNS = 17;
+   string tlsClientAuthSANURI = 18;
+   string tlsClientAuthSANIP = 19;
+   string tlsClientAuthSANEmail = 20;
+   repeated string accessTokenCustomClaims = 21;
+   repeated string idTokenCustomClaims = 22;
+   repeated string userInfoCustomClaims = 23;
+   int32 oldSecretRetentionTimeInDays = 24;
+}
+
+message scope {
+  string scope_name = 1;
+  string scope_description = 2;
+}
+ 
+message ResourceServerPrt {
    string name = 1;
    string description = 2;
    string idDomain = 3;
-   repeated string scopes = 4;
-  repeated string tokenAttributes = 5;
+   repeated scope scopes = 4;
+   repeated attributes tokenAttributes = 5;
 }
-
-
-enum gt{
-   PASSWORD = 0;
-   REFRESH_TOKEN=1;
-   JWT_BEARER=2;
-   CLIENT_CREDENTIALS=3;
-   AUTHORIZATION_CODE=4;
-}
-
-message OidcClient {
-    string name = 1;
-    string description = 2;
-    string idDomain = 3;
-    string id = 4;
-    string secret = 5;
-    string clientType = 6;
-   repeated string gt = 7;
-   repeated string scopes = 8;
-    string usePKCE = 9;
-    string defaultScope = 10;
-   repeated string redirectURIs = 11;
-   repeated string attributes = 12;
-    string tokenEndpointAuthMethod = 13;
-    string issueTLSClientCertificateBoundAccessTokens = 14;
-    string tlsClientAuthSubjectDN = 15;
-    string tlsClientAuthSANDNS = 16;
-    string tlsClientAuthSANURI = 17;
-    string tlsClientAuthSANIP = 18;
-    string tlsClientAuthSANEmail = 19;
-   repeated string accessTokenCustomClaims = 20;
-   repeated string idTokenCustomClaims = 21;
-   repeated string userInfoCustomClaims = 22;
-    int32 oldSecretRetentionTimeInDays = 23;
- }
