@@ -1,9 +1,9 @@
 # Get started with a build env with Rust nightly
-FROM docker.io/rustlang/rust:nightly-alpine as builder
+FROM docker.io/rustlang/rust:nightly-alpine AS builder
 
 RUN apk update && \
-    apk add --no-cache bash curl npm libc-dev binaryen protoc openssl-dev openssl-libs-static musl-dev
-#gcc
+    apk add --no-cache bash curl npm libc-dev binaryen protoc openssl-dev openssl-libs-static
+#gcc  musl-dev
 
 RUN npm install -g sass
 
