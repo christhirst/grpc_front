@@ -3,12 +3,11 @@ FROM docker.io/rustlang/rust:nightly-alpine AS builder
 
 RUN apk update && \
     apk add --no-cache bash curl npm libc-dev binaryen protoc openssl-dev openssl-libs-static musl-dev
-#gcc  
 
 RUN npm install -g sass
 
-RUN curl --proto '=https' --tlsv1.2 -LsSf https://github.com/leptos-rs/cargo-leptos/releases/latest/download/cargo-leptos-installer.sh | sh
-
+#RUN curl --proto '=https' --tlsv1.2 -LsSf https://github.com/leptos-rs/cargo-leptos/releases/latest/download/cargo-leptos-installer.sh | sh
+RUN curl --proto '=https' --tlsv1.2 -LsSf https://leptos-rs.artifacts.axodotdev.host/cargo-leptos/v0.2.26/cargo-leptos-installer.sh | sh
 # Add the WASM target
 RUN rustup target add wasm32-unknown-unknown
 
