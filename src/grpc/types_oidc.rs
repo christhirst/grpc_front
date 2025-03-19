@@ -1,3 +1,5 @@
+use leptos::prelude::*;
+use leptos::IntoView;
 use reactive_stores::Store;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
@@ -31,12 +33,52 @@ pub struct OidcClient {
     pub old_secret_retention_time_in_days: Option<i32>,
 }
 
-#[derive(Debug, Serialize, Deserialize, Clone)]
-#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
+#[derive(Default, Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub enum ClientType {
+    #[default]
     ConfidentialClient,
     PublicClient,
     MobileClient,
+}
+
+#[component]
+pub fn ComponentClientType(s: Option<ClientType>) -> impl IntoView {
+    match s {
+        (ConfidentialClient) => view! { <p>ConfidentialClient</p> }.into_any(),
+        (PublicClient) => view! { <p>PublicClient</p> }.into_any(),
+        (MobileClient) => view! { <p>MobileClient</p> }.into_any(),
+    }
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
+pub enum UsePKCE {
+    NonStrict,
+    Strict,
+}
+
+#[component]
+pub fn ComponentUsePKCE(s: Option<UsePKCE>) -> impl IntoView {
+    match s {
+        (NonStrict) => view! { <p>NonStrict</p> }.into_any(),
+        (Strict) => view! { <p>Strict</p> }.into_any(),
+    }
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct RedirectURI {
+    pub url: String,
+    //#[serde(rename(deserialize = "isHttps"))]
+    pub is_https: bool,
+}
+
+#[component]
+pub fn ComponentRedirectURI(s: Vec<RedirectURI>) -> impl IntoView {
+    match s {
+        (NonStrict) => view! { <p>Vector1</p><p>Vector2</p> }.into_any(),
+        (Strict) => view! { <p>Vector3</p><p>Vector4</p> }.into_any(),
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -47,13 +89,6 @@ pub enum GrantType {
     JwtBearer,
     ClientCredentials,
     AuthorizationCode,
-}
-
-#[derive(Debug, Serialize, Deserialize, Clone)]
-#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
-pub enum UsePKCE {
-    NonStrict,
-    Strict,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -68,13 +103,6 @@ pub enum TokenEndpointAuthMethod {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ScopeSettings {
     // Define fields for ScopeSettings based on the schema
-}
-
-#[derive(Debug, Serialize, Deserialize, Clone)]
-pub struct RedirectURI {
-    pub url: String,
-    //#[serde(rename(deserialize = "isHttps"))]
-    pub is_https: bool,
 }
 
 #[serde_with::skip_serializing_none]

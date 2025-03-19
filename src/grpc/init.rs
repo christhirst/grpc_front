@@ -1,3 +1,4 @@
+//use backend::NameRequest;
 //use backend::rest_request_client;
 use leptos::{prelude::ServerFnError, server};
 //use prost::bytes;
@@ -45,16 +46,62 @@ pub async fn grpc_connector(
         //include!("../backend.rs");
         tonic::include_proto!("backend");
     }
-    use backend::{rest_request_client, OidcListResponse};
-    let mut client = rest_request_client::RestRequestClient::connect("http://[::1]:50051")
-        .await
-        .unwrap();
+    use backend::{rest_request_client, OidcListResponse, ViewRequest};
 
-    /*  let request = tonic::Request::new(RequestName {
-        name: String::from("value"),
-    }); */
+    let oo = match rest_request_client::RestRequestClient::connect("http://[::1]:50051").await {
+        Ok(client) => {
+            let mut client =
+                rest_request_client::RestRequestClient::connect("http://[::1]:50051").await;
+            let mut response = client.unwrap();
+            let request = ViewRequest {
+                list: true,
+                name: String::from("value"),
+            };
+            response.oidc_list(request);
+            print!("");
+            todo!()
+        }
+        Err(_) => {
+            print!("");
+            let example_oidc_client = OidcClient {
+                name: Some("Example OIDC Client".to_string()),
+                description: Some("An example OIDC client for demonstration purposes".to_string()),
+                id_domain: Some("example.com".to_string()),
+                id: "example-client-id".to_string(),
+                secret: Some("example-client-secret".to_string()),
+                client_type: Some(ClientType::ConfidentialClient),
+                grant_types: Some(vec![GrantType::AuthorizationCode, GrantType::RefreshToken]),
+                scopes: Some(vec!["openid".to_string()]),
+                use_pkce: Some(UsePKCE::Strict),
+                default_scope: Some("openid profile".to_string()),
+                redirect_uris: Some(vec![RedirectURI {
+                    url: "https://example.com/callback".to_string(),
+                    is_https: true,
+                }]),
+                attributes: Some(vec!["example_attribute".to_string()]),
+                token_endpoint_auth_method: Some(TokenEndpointAuthMethod::ClientSecretBasic),
+                issue_tls_client_certificate_bound_access_tokens: Some("true".to_string()),
+                tls_client_auth_subject_dn: Some("CN=example.com".to_string()),
+                tls_client_auth_san_dns: Some("example.com".to_string()),
+                tls_client_auth_san_uri: Some("https://example.com".to_string()),
+                tls_client_auth_san_ip: Some("192.168.1.1".to_string()),
+                tls_client_auth_san_email: Some("admin@example.com".to_string()),
+                access_token_custom_claims: Some(vec![
+                    "custom_claim_1".to_string(),
+                    "custom_claim_2".to_string(),
+                ]),
+                id_token_custom_claims: Some(vec!["custom_claim_3".to_string()]),
+                user_info_custom_claims: Some(vec!["custom_claim_4".to_string()]),
+                old_secret_retention_time_in_days: Some(30),
+            };
 
-    //let response = client.idp_view(request).await?;
+            let mut nn = example_oidc_client.clone();
+            nn.id = String::from("value");
+
+            vec![example_oidc_client.clone(), nn]
+        }
+    };
+
     /*let url = "https://jsonplaceholder.typicode.com/todos";
     // Send a POST request with the JSON payload
      let client = Client::new();
@@ -64,37 +111,5 @@ pub async fn grpc_connector(
 
     //Ok(usr)
 
-    let example_oidc_client = OidcClient {
-        name: Some("Example OIDC Client".to_string()),
-        description: Some("An example OIDC client for demonstration purposes".to_string()),
-        id_domain: Some("example.com".to_string()),
-        id: "example-client-id".to_string(),
-        secret: Some("example-client-secret".to_string()),
-        client_type: Some(ClientType::ConfidentialClient),
-        grant_types: Some(vec![GrantType::AuthorizationCode, GrantType::RefreshToken]),
-        scopes: Some(vec!["openid".to_string()]),
-        use_pkce: Some(UsePKCE::Strict),
-        default_scope: Some("openid profile".to_string()),
-        redirect_uris: Some(vec![RedirectURI {
-            url: "https://example.com/callback".to_string(),
-            is_https: true,
-        }]),
-        attributes: Some(vec!["example_attribute".to_string()]),
-        token_endpoint_auth_method: Some(TokenEndpointAuthMethod::ClientSecretBasic),
-        issue_tls_client_certificate_bound_access_tokens: Some("true".to_string()),
-        tls_client_auth_subject_dn: Some("CN=example.com".to_string()),
-        tls_client_auth_san_dns: Some("example.com".to_string()),
-        tls_client_auth_san_uri: Some("https://example.com".to_string()),
-        tls_client_auth_san_ip: Some("192.168.1.1".to_string()),
-        tls_client_auth_san_email: Some("admin@example.com".to_string()),
-        access_token_custom_claims: Some(vec![
-            "custom_claim_1".to_string(),
-            "custom_claim_2".to_string(),
-        ]),
-        id_token_custom_claims: Some(vec!["custom_claim_3".to_string()]),
-        user_info_custom_claims: Some(vec!["custom_claim_4".to_string()]),
-        old_secret_retention_time_in_days: Some(30),
-    };
-    println!("{:?}", example_oidc_client.clone());
-    Ok(vec![example_oidc_client])
+    Ok(oo)
 }

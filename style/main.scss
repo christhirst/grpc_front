@@ -8,6 +8,20 @@ body {
 }
 
 
+table {
+  width: 50%; /* Adjust the width as needed */
+  border-collapse: collapse; /* Merges cell borders */
+}
+th, td {
+  border: 1px solid black; /* Adds borders to cells */
+  padding: 8px; /* Adds spacing inside cells */
+  text-align: left; /* Aligns text to the left */
+}
+th {
+  background-color: #f2f2f2; /* Light gray background for headers */
+}
+
+
 
   .red {
     color: red;
@@ -40,7 +54,7 @@ nav {
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   padding: 20px;
-  max-width: 300px;
+  max-width: 350px;
   margin: 20px auto;
 
   .card-content {

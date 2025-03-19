@@ -10,6 +10,7 @@ use crate::grpc::init::GrpcRequest;
 //use crate::grpc::init::RootStoreFields;
 use crate::grpc::types_oidc::OidcClient;
 use crate::grpc::types_oidc::OidcClientStoreFields;
+use crate::grpc::types_oidc::{ComponentClientType, ComponentRedirectURI, ComponentUsePKCE};
 
 /* fn load(async_data: Resource<Result<Vec<Root>>>) -> Vec<Root> {
     let u = vec![Root {
@@ -38,20 +39,7 @@ pub fn Oidc() -> impl IntoView {
         // every time `count` changes, this will run
         |_t| grpc_connector(GrpcRequest::List, vec![1]),
     );
-    /*   let u = vec![Root {
-           user_id: 1,
-           id: 66,
-           title: String::from("test66"),
-           completed: true,
-       }];
 
-       let uee = vec![Root {
-           user_id: 2,
-           id: 22,
-           title: String::from("test2"),
-           completed: true,
-       }];
-    */
     let tt = vec![OidcClient {
         id: String::from("11"),
         ..Default::default()
@@ -105,18 +93,77 @@ pub fn Oidc() -> impl IntoView {
             fallback=move || view! { <p>"Loading..."</p> }
         >
         <For
-        each=move || data.rows()
-        key=|row| row.read().id.clone()
-        children=|child| {
+        each=move || data.rows().clone().get().clone()
+        key=|state| state.clone().id.clone()
+        children=move |child| {
             view! {
+                <!DOCTYPE html>
                 //<p>{move || child.id().get()}</p>
                 //<p>{move || child.title().get()}</p>
                 <div class="card">
                 <div class="card-content">
-                  <p>{move || child.clone().id().get()}</p>
-                  //<p>{move || child.title().get()}</p>
-                  //<p>{move || child.user_id().get()}</p>
-                  //<p>{move || child.completed().get()}</p>
+                <table><tbody>
+                <tr><th>Name</th>
+                    <th>{move || child.name.clone()}</th>
+                </tr>
+                <tr>
+                    <th>Description</th>
+                    <th>{move || child.description.clone()}</th>
+                </tr>
+                <tr>
+                <th>Id_domain</th>
+                <th>{move || child.id_domain.clone()}</th>
+             </tr>
+             <tr>
+                <th>Id</th>
+                <th>{move || child.id.clone()}</th>
+             </tr>
+             <tr>
+             <th>ComponentClientType</th>
+             <th><ComponentClientType s=child.client_type.clone()/></th>
+              </tr>
+              <tr>
+             <th>ComponentClientType</th>
+             <th><ComponentClientType s=child.client_type.clone()/></th>
+              </tr>
+
+              <tr>
+              <th>Scopes</th>
+              <th> {move || child.scopes.clone().into_iter()
+                .map(|n| view! { <p>{n} </p>})
+                .collect::<Vec<_>>()}</th>
+               </tr>
+
+               <tr>
+             <th>Default_scope</th>
+             <th> {move || child.default_scope.clone().into_iter()
+                .map(|n| view! {<p>{n} </p>})
+                .collect::<Vec<_>>()} </th>
+              </tr>
+
+              <tr>
+             <th>Use_pkce</th>
+             <th><ComponentUsePKCE s=child.use_pkce.clone()/></th>
+              </tr>
+
+              <tr>
+              <th>Redirect_uris</th>
+              <th>{move || child.redirect_uris.clone().into_iter()
+                .map(|n| view! { <p><ComponentRedirectURI s={n}/> </p>})
+                .collect::<Vec<_>>()} </th>
+               </tr>
+
+               <tr>
+              <th>Attributes</th>
+              <th>{move || child.attributes.clone().into_iter()
+              .map(|n| view! { <p>{n} </p>})
+              .collect::<Vec<_>>()} </th>
+               </tr>
+
+
+              </tbody>
+                </table>
+
                 </div>
               </div>
 
