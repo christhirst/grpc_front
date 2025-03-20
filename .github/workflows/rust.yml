@@ -74,7 +74,7 @@ jobs:
           target: runtime
           push: true
           tags: raynkami/rust.grpcfront:v0.0.1
-          labels: rust.auto
+          labels: rust.grpcfront
 
   del_runs:
     runs-on: ubuntu-latest

@@ -1,0 +1,7 @@
+debug = true
+
+[database]
+echo = true
+
+[grpc]
+port = 50051

@@ -2,8 +2,8 @@ pub mod app;
 pub mod grpc;
 pub mod list;
 //pub mod settings;
-
 mod routes;
+pub mod settings;
 
 #[cfg(feature = "hydrate")]
 #[wasm_bindgen::prelude::wasm_bindgen]

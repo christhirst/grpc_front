@@ -1,3 +1,4 @@
+use anyhow;
 use leptos::prelude::*;
 use leptos::IntoView;
 use reactive_stores::Store;
@@ -13,15 +14,15 @@ pub struct OidcClient {
     pub id_domain: Option<String>,
     pub id: String,
     pub secret: Option<String>,
-    pub client_type: Option<ClientType>,
-    pub grant_types: Option<Vec<GrantType>>,
+    pub client_type: Option<String>,
+    pub grant_types: Option<Vec<String>>,
     pub scopes: Option<Vec<String>>,
-    pub use_pkce: Option<UsePKCE>,
+    pub use_pkce: Option<String>,
     pub default_scope: Option<String>,
     pub redirect_uris: Option<Vec<RedirectURI>>,
-    pub attributes: Option<Vec<String>>,
-    pub token_endpoint_auth_method: Option<TokenEndpointAuthMethod>,
-    pub issue_tls_client_certificate_bound_access_tokens: Option<String>,
+    pub attributes: Option<Vec<Attributes>>,
+    pub token_endpoint_auth_method: Option<String>,
+    pub issue_tls_client_certificate_bound_access_tokens: Option<bool>,
     pub tls_client_auth_subject_dn: Option<String>,
     pub tls_client_auth_san_dns: Option<String>,
     pub tls_client_auth_san_uri: Option<String>,
@@ -31,6 +32,19 @@ pub struct OidcClient {
     pub id_token_custom_claims: Option<Vec<String>>,
     pub user_info_custom_claims: Option<Vec<String>>,
     pub old_secret_retention_time_in_days: Option<i32>,
+}
+
+/* impl From<OidcListResponse> for Vec<OidcClient> {
+    fn from(response: OidcListResponse) -> Self {
+        todo!()
+    }
+} */
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct Attributes {
+    pub attr_name: String,
+    pub attr_value: String,
+    pub attr_type: String,
 }
 
 #[derive(Default, Debug, Clone, Serialize, Deserialize)]

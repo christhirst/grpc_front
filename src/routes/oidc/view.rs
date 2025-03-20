@@ -114,20 +114,19 @@ pub fn Oidc() -> impl IntoView {
                 <th>Id_domain</th>
                 <th>{move || child.id_domain.clone()}</th>
              </tr>
+
              <tr>
                 <th>Id</th>
                 <th>{move || child.id.clone()}</th>
              </tr>
-             <tr>
-             <th>ComponentClientType</th>
-             <th><ComponentClientType s=child.client_type.clone()/></th>
-              </tr>
-              <tr>
-             <th>ComponentClientType</th>
-             <th><ComponentClientType s=child.client_type.clone()/></th>
-              </tr>
 
-              <tr>
+
+            <tr>
+             <th>ComponentClientType</th>
+             <th>child.client_type.clone()</th>
+            </tr>
+
+               <tr>
               <th>Scopes</th>
               <th> {move || child.scopes.clone().into_iter()
                 .map(|n| view! { <p>{n} </p>})
@@ -143,7 +142,7 @@ pub fn Oidc() -> impl IntoView {
 
               <tr>
              <th>Use_pkce</th>
-             <th><ComponentUsePKCE s=child.use_pkce.clone()/></th>
+             <th>child.use_pkce.clone()</th>
               </tr>
 
               <tr>
@@ -155,20 +154,15 @@ pub fn Oidc() -> impl IntoView {
 
                <tr>
               <th>Attributes</th>
-              <th>{move || child.attributes.clone().into_iter()
-              .map(|n| view! { <p>{n} </p>})
+              <th>{move || child.attributes.clone().unwrap().into_iter()
+              .map(|n| view! { <p>{n.attr_name} </p>})
               .collect::<Vec<_>>()} </th>
                </tr>
-
-
               </tbody>
                 </table>
 
                 </div>
               </div>
-
-
-                //<p>{move || valu}</p>
              }
         }
     />
