@@ -4,4 +4,11 @@ debug = true
 echo = true
 
 [grpc]
+scheme = "http"
+server = "[::1]"
 port = 50051
+
+[http]
+scheme = "http"
+server = "10.255.255.254"
+port = 8080

@@ -3,13 +3,10 @@
 use leptos::{prelude::ServerFnError, server};
 //use prost::bytes;
 use reactive_stores::Store;
-use reqwest::Client;
+
 use serde::{Deserialize, Serialize};
 
-use crate::grpc::types_oidc::{
-    ClientType, GrantType, OidcClient, RedirectURI, TokenEndpointAuthMethod, UsePKCE,
-};
-use crate::settings;
+use crate::grpc::types_oidc::OidcClient;
 
 #[derive(Store, Debug, Clone)]
 pub struct Data {
@@ -40,15 +37,17 @@ pub struct Root {
 #[server]
 pub async fn grpc_connector(
     _gr: GrpcRequest,
-    bytes: Vec<u8>,
+    _bytes: Vec<u8>,
 ) -> Result<Vec<OidcClient>, ServerFnError> {
+    use crate::grpc::types_oidc::RedirectURI;
+
     pub mod backend {
         //include!("../backend.rs");
         tonic::include_proto!("backend");
     }
-    use backend::{rest_request_client, Attributes, OidcListResponse, ViewRequest};
+    use backend::{rest_request_client, OidcListResponse, ViewRequest};
 
-    //#region TryFrom
+    /* #region TryFrom */
     impl TryFrom<OidcListResponse> for Vec<OidcClient> {
         type Error = anyhow::Error;
         fn try_from(value: OidcListResponse) -> Result<Self, Self::Error> {
@@ -104,26 +103,30 @@ pub async fn grpc_connector(
             Ok(oidc_clients)
         }
     }
-    //#endregion
+    /* #endregion */
 
+    /* #region settings */
+    use crate::settings;
     use settings::Settings;
     let settings = Settings::new().unwrap();
-    let grpc = format!("http://[::1]:{}", settings.grpc.port);
+    let grpc = format!(
+        "{}://{}:{}",
+        settings.grpc.scheme, settings.grpc.server, settings.grpc.port
+    );
+    /* #endregion */
 
-    let oo = match rest_request_client::RestRequestClient::connect(grpc.clone()).await {
-        Ok(client) => {
-            let mut client = rest_request_client::RestRequestClient::connect(grpc).await;
-            let mut response = client.unwrap();
+    let oo = match rest_request_client::RestRequestClient::connect(grpc).await {
+        Ok(mut client) => {
             let request = ViewRequest {
                 list: true,
                 name: String::from("value"),
             };
-            let resp = response.oidc_list(request).await?.into_inner();
+            let resp = client.oidc_list(request).await?.into_inner();
             let resp = resp.try_into().unwrap();
             resp
         }
         Err(_) => {
-            //#region FakeData
+            /* #region FakeData */
             let example_oidc_client = OidcClient {
                 name: Some("Example OIDC Client".to_string()),
                 description: Some("An example OIDC client for demonstration purposes".to_string()),
@@ -162,7 +165,7 @@ pub async fn grpc_connector(
                 user_info_custom_claims: Some(vec!["custom_claim_4".to_string()]),
                 old_secret_retention_time_in_days: Some(30),
             };
-            //#endregion
+            /* #endregion */
 
             let mut nn = example_oidc_client.clone();
             nn.id = String::from("value");

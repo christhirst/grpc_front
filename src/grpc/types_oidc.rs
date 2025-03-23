@@ -1,9 +1,8 @@
-use anyhow;
 use leptos::prelude::*;
 use leptos::IntoView;
 use reactive_stores::Store;
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
+//use std::collections::HashMap;
 
 #[serde_with::skip_serializing_none]
 #[derive(Store, Default, Debug, Clone, Serialize, Deserialize)]
@@ -59,9 +58,10 @@ pub enum ClientType {
 #[component]
 pub fn ComponentClientType(s: Option<ClientType>) -> impl IntoView {
     match s {
-        (ConfidentialClient) => view! { <p>ConfidentialClient</p> }.into_any(),
-        (PublicClient) => view! { <p>PublicClient</p> }.into_any(),
-        (MobileClient) => view! { <p>MobileClient</p> }.into_any(),
+        Some(ClientType::ConfidentialClient) => view! { <p>ConfidentialClient</p> }.into_any(),
+        Some(ClientType::PublicClient) => view! { <p>PublicClient</p> }.into_any(),
+        Some(ClientType::MobileClient) => view! { <p>MobileClient</p> }.into_any(),
+        None => view! { <p>None</p> }.into_any(),
     }
 }
 
@@ -75,8 +75,9 @@ pub enum UsePKCE {
 #[component]
 pub fn ComponentUsePKCE(s: Option<UsePKCE>) -> impl IntoView {
     match s {
-        (NonStrict) => view! { <p>NonStrict</p> }.into_any(),
-        (Strict) => view! { <p>Strict</p> }.into_any(),
+        Some(UsePKCE::NonStrict) => view! { <p>NonStrict</p> }.into_any(),
+        Some(UsePKCE::Strict) => view! { <p>Strict</p> }.into_any(),
+        None => view! { <p>None</p> }.into_any(),
     }
 }
 
@@ -89,9 +90,12 @@ pub struct RedirectURI {
 
 #[component]
 pub fn ComponentRedirectURI(s: Vec<RedirectURI>) -> impl IntoView {
-    match s {
-        (NonStrict) => view! { <p>Vector1</p><p>Vector2</p> }.into_any(),
-        (Strict) => view! { <p>Vector3</p><p>Vector4</p> }.into_any(),
+    view! {
+               <p>{s.into_iter().map(|n|view! {
+                   <ul>
+                   <li>{n.url}</li>
+                   </ul>
+               }).collect::<Vec<_>>()}</p>
     }
 }
 

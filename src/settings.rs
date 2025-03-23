@@ -12,6 +12,16 @@ struct Database {
 #[derive(Debug, Deserialize)]
 #[allow(unused)]
 pub struct Grpc {
+    pub scheme: String,
+    pub server: String,
+    pub port: String,
+}
+
+#[derive(Debug, Deserialize)]
+#[allow(unused)]
+pub struct Http {
+    pub scheme: String,
+    pub server: String,
     pub port: String,
 }
 
@@ -21,11 +31,14 @@ pub(crate) struct Settings {
     debug: bool,
     database: Database,
     pub grpc: Grpc,
+    pub http: Http,
 }
 
+#[allow(dead_code)]
 impl Settings {
     pub(crate) fn new() -> Result<Self, ConfigError> {
         let run_mode = env::var("RUN_MODE").unwrap_or_else(|_| "dev".into());
+        let grpc_server = env::var("GRPC_SERVER").unwrap_or_else(|_| "dev".into());
 
         let s = Config::builder()
             // Start off by merging in the "default" configuration file
@@ -40,6 +53,7 @@ impl Settings {
             // Add in settings from the environment (with a prefix of APP)
             // Eg.. `APP_DEBUG=1 ./target/app` would set the `debug` key
             .add_source(Environment::with_prefix("app"))
+            .set_override("grpc.server", grpc_server)?
             // You may also programmatically change settings
             //.set_override("database.url", "postgres://")?
             .build()?;

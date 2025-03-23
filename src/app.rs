@@ -1,25 +1,20 @@
 use leptos::{prelude::*, task::spawn_local};
 use leptos_meta::{provide_meta_context, MetaTags, Stylesheet, Title};
 use leptos_router::{
-    components::{Form, Route, Router, Routes},
+    components::{Route, Router, Routes},
     StaticSegment,
 };
 
 use server_fn::{
-    client::{browser::BrowserClient, Client},
-    codec::{
-        Encoding, FromReq, FromRes, GetUrl, IntoReq, IntoRes, MultipartData, MultipartFormData,
-        Postcard, Rkyv, SerdeLite, StreamingText, TextStream,
-    },
-    request::{browser::BrowserRequest, ClientReq, Req},
-    response::{browser::BrowserResponse, ClientRes, Res},
+    //client::{browser::BrowserClient, Client},
+    codec::{MultipartData, MultipartFormData},
 };
 use wasm_bindgen::JsCast;
 use web_sys::{FormData, HtmlFormElement, SubmitEvent};
 
+use crate::list::api::get;
+use crate::routes::oidc::view::Oidc;
 use crate::routes::saml::view::ListMeta;
-use crate::{grpc::init::grpc_connector, list::api::get};
-use crate::{grpc::init::GrpcRequest, routes::oidc::view::Oidc};
 
 #[component]
 pub fn App() -> impl IntoView {
@@ -69,16 +64,8 @@ pub fn BusyButton() -> impl IntoView {
     }
 }
 
-#[component]
-pub fn Upload() -> impl IntoView {
-    view! {
-        <html lang="en">
-        <body>
-
-    </body>
-    </html>
-    }
-}
+/* #[component]
+pub fn reload(rc: Resource<Result<Vec<OidcClient>>>) -> impl IntoView {} */
 
 pub fn shell(options: LeptosOptions) -> impl IntoView {
     view! {
@@ -137,7 +124,7 @@ pub fn FormExample() -> impl IntoView {
         /* let string = String::from_utf8_lossy(&file_data);
         println!("{}", string); */
 
-        grpc_connector(GrpcRequest::Create, file_data);
+        //grpc_connector(GrpcRequest::Create, file_data);
 
         Ok(count)
     }

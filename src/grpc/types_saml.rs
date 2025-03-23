@@ -1,6 +1,5 @@
 use serde::{Deserialize, Serialize};
 use serde_with::skip_serializing_none;
-use std::collections::HashMap;
 
 #[skip_serializing_none]
 #[derive(Clone, PartialEq, Serialize, Deserialize)]
