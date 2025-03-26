@@ -24,10 +24,10 @@ pub fn Oidc() -> impl IntoView {
         |_t| grpc_connector(GrpcRequest::List, vec![1]),
     );
 
-    let tt = vec![OidcClient {
+    /* let tt = vec![OidcClient {
         id: String::from("11"),
         ..Default::default()
-    }];
+    }]; */
 
     let t1 = vec![OidcClient {
         id: String::from("222"),
@@ -63,7 +63,7 @@ pub fn Oidc() -> impl IntoView {
            <h1>OIDC</h1>
           // {println!("test")}
            <button on:click=move |_| {
-               let pp = async_data.get().unwrap_or(Ok(tt.clone())).unwrap();
+               let pp = async_data.get().unwrap_or(Ok(t1.clone())).unwrap();
                data.set(Data { rows: pp });
            }>
                "Update OIDC Clients"
@@ -151,10 +151,11 @@ pub fn Oidc() -> impl IntoView {
 
                   <tr>
                  <th>Attributes</th>
-                 <th>{move || child.attributes.clone().unwrap().into_iter()
+                 <th>{move || child.attributes.clone().unwrap_or_default().into_iter()
                  .map(|n| view! { <p>{n.attr_name} </p>})
                  .collect::<Vec<_>>()} </th>
                   </tr>
+
                  </tbody>
                    </table>
 

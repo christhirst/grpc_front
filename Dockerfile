@@ -19,12 +19,12 @@ RUN cargo leptos build --release -vv
 #FROM docker.io/rustlang/rust:nightly-alpine as runner
 FROM gcr.io/distroless/cc AS runtime
 
-WORKDIR /app
+WORKDIR /grpc_front
 
-COPY --from=builder /work/target/release/grpc_front /app/
-COPY --from=builder /work/target/site /app/site
-COPY --from=builder /work/Cargo.toml /app/
-COPY --from=builder /work/config/* /app/config/
+COPY --from=builder /work/target/release/grpc_front /grpc_front/
+COPY --from=builder /work/target/site /grpc_front/site
+COPY --from=builder /work/Cargo.toml /grpc_front/
+COPY --from=builder /work/config/* /grpc_front/config/
 
 ENV RUST_LOG="info"
 ENV LEPTOS_SITE_ADDR="0.0.0.0:8080"
