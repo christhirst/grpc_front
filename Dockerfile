@@ -19,7 +19,6 @@ RUN cargo leptos build --release -vv
 #FROM docker.io/rustlang/rust:nightly-alpine as runner
 FROM gcr.io/distroless/cc AS runtime
 
-RUN mkdir -p /app/config/
 WORKDIR /app
 
 COPY --from=builder /work/target/release/grpc_front /app/
