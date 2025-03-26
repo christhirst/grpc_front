@@ -73,7 +73,7 @@ jobs:
           context: .
           target: runtime
           push: true
-          tags: raynkami/rust.grpcfront:v0.0.5
+          tags: raynkami/rust.grpcfront:v0.0.6
           labels: rust.grpcfront
 
   del_runs:
