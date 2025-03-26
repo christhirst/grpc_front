@@ -29,6 +29,7 @@ COPY --from=builder /work/config/* /grpc_front/config/
 ENV RUST_LOG="info"
 ENV LEPTOS_SITE_ADDR="0.0.0.0:8080"
 ENV LEPTOS_SITE_ROOT=./site
+ENV CONF_DIR=/grpc_front/config
 EXPOSE 8080
 
 CMD ["/grpc_front/grpc_front"]
