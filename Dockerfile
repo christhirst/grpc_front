@@ -24,7 +24,7 @@ WORKDIR /app
 COPY --from=builder /work/target/release/grpc_front /app/
 COPY --from=builder /work/target/site /app/site
 COPY --from=builder /work/Cargo.toml /app/
-COPY --from=builder /work/config/* /Cargo.toml /app/config/
+COPY --from=builder /work/config/* /app/config/
 
 ENV RUST_LOG="info"
 ENV LEPTOS_SITE_ADDR="0.0.0.0:8080"
