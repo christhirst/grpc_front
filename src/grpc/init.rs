@@ -115,63 +115,63 @@ pub async fn grpc_connector(
     );
     /* #endregion */
 
-    /* let oo = match rest_request_client::RestRequestClient::connect(grpc).await {
-    Ok(mut client) => {
-        let request = ViewRequest {
-            list: true,
-            name: String::from("value"),
-        };
-        let resp = client.oidc_list(request).await?.into_inner();
-        let resp = resp.try_into().unwrap();
-        resp
-    }
-    Err(_) => { */
-    /* #region FakeData */
-    let example_oidc_client = OidcClient {
-        name: Some("Example OIDC Client".to_string()),
-        description: Some("An example OIDC client for demonstration purposes".to_string()),
-        id_domain: Some("example.com".to_string()),
-        id: "example-client-id".to_string(),
-        secret: Some("example-client-secret".to_string()),
-        client_type: Some(String::from("ConfidentialClient")),
-        grant_types: Some(vec![
-            String::from("AuthorizationCode"),
-            String::from("RefreshToken"),
-        ]),
-        scopes: Some(vec!["openid".to_string()]),
-        use_pkce: Some(String::from("Strict")),
-        default_scope: Some("openid profile".to_string()),
-        redirect_uris: Some(vec![RedirectURI {
-            url: "https://example.com/callback".to_string(),
-            is_https: true,
-        }]),
-        attributes: Some(vec![crate::grpc::types_oidc::Attributes {
-            attr_name: String::from("example_attribute"),
-            attr_value: String::from("example_attribute"),
-            attr_type: String::from("example_attribute"),
-        }]),
-        token_endpoint_auth_method: Some(String::from("ClientSecretBasic")),
-        issue_tls_client_certificate_bound_access_tokens: Some(true),
-        tls_client_auth_subject_dn: Some("CN=example.com".to_string()),
-        tls_client_auth_san_dns: Some("example.com".to_string()),
-        tls_client_auth_san_uri: Some("https://example.com".to_string()),
-        tls_client_auth_san_ip: Some("192.168.1.1".to_string()),
-        tls_client_auth_san_email: Some("admin@example.com".to_string()),
-        access_token_custom_claims: Some(vec![
-            "custom_claim_1".to_string(),
-            "custom_claim_2".to_string(),
-        ]),
-        id_token_custom_claims: Some(vec!["custom_claim_3".to_string()]),
-        user_info_custom_claims: Some(vec!["custom_claim_4".to_string()]),
-        old_secret_retention_time_in_days: Some(30),
+    let oo = match rest_request_client::RestRequestClient::connect(grpc).await {
+        Ok(mut client) => {
+            let request = ViewRequest {
+                list: true,
+                name: String::from("value"),
+            };
+            let resp = client.oidc_list(request).await?.into_inner();
+            let resp = resp.try_into().unwrap();
+            resp
+        }
+        Err(_) => {
+            /* #region FakeData */
+            let example_oidc_client = OidcClient {
+                name: Some("Example OIDC Client".to_string()),
+                description: Some("An example OIDC client for demonstration purposes".to_string()),
+                id_domain: Some("example.com".to_string()),
+                id: "example-client-id".to_string(),
+                secret: Some("example-client-secret".to_string()),
+                client_type: Some(String::from("ConfidentialClient")),
+                grant_types: Some(vec![
+                    String::from("AuthorizationCode"),
+                    String::from("RefreshToken"),
+                ]),
+                scopes: Some(vec!["openid".to_string()]),
+                use_pkce: Some(String::from("Strict")),
+                default_scope: Some("openid profile".to_string()),
+                redirect_uris: Some(vec![RedirectURI {
+                    url: "https://example.com/callback".to_string(),
+                    is_https: true,
+                }]),
+                attributes: Some(vec![crate::grpc::types_oidc::Attributes {
+                    attr_name: String::from("example_attribute"),
+                    attr_value: String::from("example_attribute"),
+                    attr_type: String::from("example_attribute"),
+                }]),
+                token_endpoint_auth_method: Some(String::from("ClientSecretBasic")),
+                issue_tls_client_certificate_bound_access_tokens: Some(true),
+                tls_client_auth_subject_dn: Some("CN=example.com".to_string()),
+                tls_client_auth_san_dns: Some("example.com".to_string()),
+                tls_client_auth_san_uri: Some("https://example.com".to_string()),
+                tls_client_auth_san_ip: Some("192.168.1.1".to_string()),
+                tls_client_auth_san_email: Some("admin@example.com".to_string()),
+                access_token_custom_claims: Some(vec![
+                    "custom_claim_1".to_string(),
+                    "custom_claim_2".to_string(),
+                ]),
+                id_token_custom_claims: Some(vec!["custom_claim_3".to_string()]),
+                user_info_custom_claims: Some(vec!["custom_claim_4".to_string()]),
+                old_secret_retention_time_in_days: Some(30),
+            };
+            /* #endregion */
+
+            let mut nn = example_oidc_client.clone();
+            nn.id = String::from("value");
+
+            vec![example_oidc_client.clone(), nn]
+        }
     };
-    /* #endregion */
-
-    let mut nn = example_oidc_client.clone();
-    nn.id = String::from("value");
-
-    Ok(vec![example_oidc_client.clone(), nn])
-    //}
-    //};
-    //Ok(oo)
+    Ok(oo)
 }

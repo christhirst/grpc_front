@@ -40,6 +40,7 @@ impl Settings {
         let conf_dir = env::var("CONF_DIR").unwrap_or_else(|_| "dev".into());
         let run_mode = env::var("RUN_MODE").unwrap_or_else(|_| "dev".into());
         let grpc_server = env::var("GRPC_SERVER").unwrap_or_else(|_| "dev".into());
+        let grpc_port = env::var("GRPC_PORT").unwrap_or_else(|_| "dev".into());
 
         let s = Config::builder()
             // Start off by merging in the "default" configuration file
@@ -57,6 +58,7 @@ impl Settings {
             // Eg.. `APP_DEBUG=1 ./target/app` would set the `debug` key
             .add_source(Environment::with_prefix("app"))
             .set_override("grpc.server", grpc_server)?
+            .set_override("grpc.port", grpc_port)?
             // You may also programmatically change settings
             //.set_override("database.url", "postgres://")?
             .build()?;
