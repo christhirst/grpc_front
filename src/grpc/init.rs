@@ -1,12 +1,15 @@
 //use backend::NameRequest;
 //use backend::rest_request_client;
 use leptos::{prelude::ServerFnError, server};
+use prost_types::value;
 //use prost::bytes;
 use reactive_stores::Store;
 
 use serde::{Deserialize, Serialize};
 
 use crate::grpc::types_oidc::OidcClient;
+
+use super::types_saml::IdpPartner;
 
 #[derive(Store, Debug, Clone)]
 pub struct Data {
@@ -35,8 +38,68 @@ pub struct Root {
 //
 
 #[server]
-pub async fn grpc_connector(
-    _gr: GrpcRequest,
+pub async fn grpc_connector_saml(
+    gr: GrpcRequest,
+    _bytes: Vec<u8>,
+) -> Result<Vec<IdpPartner>, ServerFnError> {
+    pub mod backend {
+        //include!("../backend.rs");
+        tonic::include_proto!("backend");
+    }
+    use backend::{restrequest_client, IdpPartnerPrt};
+    /*#region TryFrom */
+    impl TryFrom<IdpPartnerPrt> for IdpPartner {
+        type Error = anyhow::Error;
+
+        fn try_from(value: IdpPartnerPrt) -> Result<Self, Self::Error> {
+            IdpPartner {
+                metadata_b64: Some(value.metadata_b64),
+                metadata_url: Some(value.metadata_url),
+                partner_type: Some(value.partner_type),
+                tenant_name: Some(value.tenant_name),
+                tenant_url: Some(value.tenant_url),
+                partner_name: Some(value.partner_name),
+                name_id_format: Some(value.name_id_format),
+                sso_profile: Some(value.sso_profile),
+                attribute_ldap: Some(value.attribute_ldap),
+                attribute_saml: Some(value.attribute_saml),
+                fa_welcome_page: Some(value.fa_welcome_page),
+                generate_new_keys: Some(value.generate_new_keys),
+                validity_new_keys: Some(value.validity_new_keys),
+                preverify: Some(value.preverify),
+                provider_id: Some(value.provider_id),
+                sso_url: Some(value.sso_url),
+                sso_soap_url: Some(value.sso_soapurl),
+                logout_request_url: Some(value.logout_request_url),
+                logout_response_url: Some(value.logout_response_url),
+                assertion_consumer_url: Some(value.assertion_consumer_url),
+                succinct_id: Some(value.succinct_id),
+                signing_cert: Some(value.signing_cert),
+                encryption_cert: Some(value.encryption_cert),
+                signature_digest_algorithm: Some(value.signature_digest_algorithm),
+                signing_keystore_access_template_id: Some(
+                    value.signing_keystore_access_template_id,
+                ),
+                encryption_keystore_access_template_id: Some(
+                    value.encryption_keystore_access_template_id,
+                ),
+                admin_fed_instance_type: Some(value.admin_fed_instance_type),
+            };
+            todo!()
+        }
+    }
+    /* #endregion */
+
+    /*#region TryFrom */
+    //impl TryFrom<IdpListResponse> for Vec<IdpPartner> {}
+    /* #endregion */
+
+    todo!()
+}
+
+#[server]
+pub async fn grpc_connector_oidc(
+    gr: GrpcRequest,
     _bytes: Vec<u8>,
 ) -> Result<Vec<OidcClient>, ServerFnError> {
     use crate::grpc::types_oidc::RedirectURI;
@@ -45,9 +108,9 @@ pub async fn grpc_connector(
         //include!("../backend.rs");
         tonic::include_proto!("backend");
     }
-    use backend::{rest_request_client, OidcListResponse, ViewRequest};
+    use backend::{restrequest_client, OidcListResponse, ViewRequest};
 
-    /* #region TryFrom */
+    /*#region TryFrom */
     impl TryFrom<OidcListResponse> for Vec<OidcClient> {
         type Error = anyhow::Error;
         fn try_from(value: OidcListResponse) -> Result<Self, Self::Error> {
@@ -105,7 +168,7 @@ pub async fn grpc_connector(
     }
     /* #endregion */
 
-    /* #region settings */
+    /*#region settings */
     use crate::settings;
     use settings::Settings;
     let settings = Settings::new().unwrap();
@@ -113,10 +176,22 @@ pub async fn grpc_connector(
         "{}://{}:{}",
         settings.grpc.scheme, settings.grpc.server, settings.grpc.port
     );
-    /* #endregion */
+    /*#endregion */
 
-    let oo = match rest_request_client::RestRequestClient::connect(grpc).await {
+    match gr {
+        GrpcRequest::Create => {
+            println!("Create");
+            println!("Create");
+        }
+        _ => {
+            println!("others");
+            println!("others");
+        }
+    }
+
+    let oo = match restrequest_client::RestrequestClient::connect(grpc).await {
         Ok(mut client) => {
+            println!("grpc call");
             let request = ViewRequest {
                 list: true,
                 name: String::from("value"),

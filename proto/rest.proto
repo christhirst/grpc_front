@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package backend;
 
-service RestRequest {
+service Restrequest {
     rpc ReSrList (ViewRequest) returns (ReSrListResponse);
     rpc ReSrView (NameRequest) returns (ResourceServerPrt);
     rpc ReSrCreate (ResourceServerPrt) returns (ResourceServerPrt);

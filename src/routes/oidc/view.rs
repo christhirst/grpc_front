@@ -2,7 +2,7 @@ use leptos::prelude::*;
 //use leptos::task::spawn_local;
 use reactive_stores::Store;
 
-use crate::grpc::init::grpc_connector;
+use crate::grpc::init::grpc_connector_oidc;
 use crate::grpc::init::Data;
 use crate::grpc::init::DataStoreFields;
 use crate::grpc::init::GrpcRequest;
@@ -16,12 +16,15 @@ use crate::grpc::types_oidc::{Attributes, OidcClient};
 pub fn Oidc() -> impl IntoView {
     let _rq = GrpcRequest::List;
     let (_count, _set_count) = signal(0);
-    let (t, _tt) = signal(0);
+    let (t, tt) = signal(0);
 
     let async_data = Resource::new(
         move || t.get(),
         // every time `count` changes, this will run
-        |_t| grpc_connector(GrpcRequest::List, vec![1]),
+        |_t| {
+            println!("ee");
+            grpc_connector_oidc(GrpcRequest::List, vec![1])
+        },
     );
 
     /* let tt = vec![OidcClient {
@@ -63,7 +66,10 @@ pub fn Oidc() -> impl IntoView {
            <h1>OIDC</h1>
           // {println!("test")}
            <button on:click=move |_| {
-               let pp = async_data.get().unwrap_or(Ok(t1.clone())).unwrap();
+            *tt.write() += 1;
+               let pp = async_data.get().unwrap().unwrap();
+               //_or(Ok(t1.clone())).unwrap_or_default();
+
                data.set(Data { rows: pp });
            }>
                "Update OIDC Clients"

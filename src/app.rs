@@ -9,12 +9,13 @@ use server_fn::{
     //client::{browser::BrowserClient, Client},
     codec::{MultipartData, MultipartFormData},
 };
+use tracing::info;
 use wasm_bindgen::JsCast;
 use web_sys::{FormData, HtmlFormElement, SubmitEvent};
 
-use crate::list::api::get;
-use crate::routes::oidc::view::Oidc;
 use crate::routes::saml::view::ListMeta;
+use crate::{grpc::init::grpc_connector_oidc, routes::oidc::view::Oidc};
+use crate::{grpc::init::GrpcRequest, list::api::get};
 
 #[component]
 pub fn App() -> impl IntoView {
@@ -102,7 +103,7 @@ pub fn FormExample() -> impl IntoView {
     )]
     pub async fn file_length(data: MultipartData) -> Result<usize, ServerFnError> {
         let mut data = data.into_inner().unwrap();
-        println!("{:?}", data);
+        info!("{:?}", data);
         // this will just measure the total number of bytes uploaded
         let mut count = 0;
         let mut file_data = Vec::new();
@@ -124,7 +125,7 @@ pub fn FormExample() -> impl IntoView {
         /* let string = String::from_utf8_lossy(&file_data);
         println!("{}", string); */
 
-        //grpc_connector(GrpcRequest::Create, file_data);
+        grpc_connector_oidc(GrpcRequest::Create, file_data);
 
         Ok(count)
     }
@@ -164,15 +165,6 @@ pub fn FormExample() -> impl IntoView {
         }}
 
     </p>
-
-
-
-
-
-        /* <Form method="POST" action="">
-            <input type="file" name="fileupload" required/>
-        </Form> */
-
     }
 }
 
