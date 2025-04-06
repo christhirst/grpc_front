@@ -1,13 +1,13 @@
 //use backend::NameRequest;
 //use backend::rest_request_client;
 use leptos::{prelude::ServerFnError, server};
-use prost_types::value;
+
 //use prost::bytes;
 use reactive_stores::Store;
 
 use serde::{Deserialize, Serialize};
 
-use crate::grpc::types_oidc::OidcClient;
+use crate::{grpc::types_oidc::OidcClient, settings::Settings};
 
 use super::types_saml::IdpPartner;
 
@@ -26,22 +26,25 @@ pub enum GrpcRequest {
     Delete,
 }
 
-/* #[derive(Store, Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct Root {
-    pub user_id: i64,
-    pub id: i64,
-    pub title: String,
-    pub completed: bool,
-} */
+#[allow(dead_code)]
+fn setting() -> (String, String) {
+    /*#region settings */
 
-//
+    let settings = Settings::new().unwrap();
+    let grpc = format!(
+        "{}://{}:{}",
+        settings.grpc.scheme, settings.grpc.server, settings.grpc.port
+    );
+    /*#endregion */
+    (grpc.clone(), grpc)
+}
 
 #[server]
 pub async fn grpc_connector_saml(
-    gr: GrpcRequest,
-    _bytes: Vec<u8>,
+    _gr: GrpcRequest,
+    idp: IdpPartner,
 ) -> Result<Vec<IdpPartner>, ServerFnError> {
+    println!("grpc call");
     pub mod backend {
         //include!("../backend.rs");
         tonic::include_proto!("backend");
@@ -53,48 +56,88 @@ pub async fn grpc_connector_saml(
 
         fn try_from(value: IdpPartnerPrt) -> Result<Self, Self::Error> {
             IdpPartner {
-                metadata_b64: Some(value.metadata_b64),
-                metadata_url: Some(value.metadata_url),
-                partner_type: Some(value.partner_type),
-                tenant_name: Some(value.tenant_name),
-                tenant_url: Some(value.tenant_url),
-                partner_name: Some(value.partner_name),
-                name_id_format: Some(value.name_id_format),
-                sso_profile: Some(value.sso_profile),
-                attribute_ldap: Some(value.attribute_ldap),
-                attribute_saml: Some(value.attribute_saml),
-                fa_welcome_page: Some(value.fa_welcome_page),
-                generate_new_keys: Some(value.generate_new_keys),
-                validity_new_keys: Some(value.validity_new_keys),
-                preverify: Some(value.preverify),
-                provider_id: Some(value.provider_id),
-                sso_url: Some(value.sso_url),
-                sso_soap_url: Some(value.sso_soapurl),
-                logout_request_url: Some(value.logout_request_url),
-                logout_response_url: Some(value.logout_response_url),
-                assertion_consumer_url: Some(value.assertion_consumer_url),
-                succinct_id: Some(value.succinct_id),
-                signing_cert: Some(value.signing_cert),
-                encryption_cert: Some(value.encryption_cert),
-                signature_digest_algorithm: Some(value.signature_digest_algorithm),
-                signing_keystore_access_template_id: Some(
-                    value.signing_keystore_access_template_id,
-                ),
-                encryption_keystore_access_template_id: Some(
-                    value.encryption_keystore_access_template_id,
-                ),
-                admin_fed_instance_type: Some(value.admin_fed_instance_type),
+                metadata_b64: value.metadata_b64,
+                metadata_url: value.metadata_url,
+                partner_type: value.partner_type,
+                tenant_name: value.tenant_name,
+                tenant_url: value.tenant_url,
+                partner_name: value.partner_name,
+                name_id_format: value.name_id_format,
+                sso_profile: value.sso_profile,
+                attribute_ldap: value.attribute_ldap,
+                attribute_saml: value.attribute_saml,
+                fa_welcome_page: value.fa_welcome_page,
+                generate_new_keys: value.generate_new_keys,
+                validity_new_keys: value.validity_new_keys,
+                preverify: value.preverify,
+                provider_id: value.provider_id,
+                sso_url: value.sso_url,
+                sso_soap_url: value.sso_soapurl,
+                logout_request_url: value.logout_request_url,
+                logout_response_url: value.logout_response_url,
+                assertion_consumer_url: value.assertion_consumer_url,
+                succinct_id: value.succinct_id,
+                signing_cert: value.signing_cert,
+                encryption_cert: value.encryption_cert,
+                signature_digest_algorithm: value.signature_digest_algorithm,
+                signing_keystore_access_template_id: value.signing_keystore_access_template_id,
+                encryption_keystore_access_template_id: value
+                    .encryption_keystore_access_template_id,
+
+                ..Default::default() /*
+                                     signing_keystore_access_template_id: None
+                                         value
+                                             .signing_keystore_access_template_id
+                                             .unwrap_or_default(),
+                                     ),
+                                     encryption_keystore_access_template_id: None
+                                         value
+                                             .encryption_keystore_access_template_id
+                                             .unwrap_or_default(),
+                                     ),
+                                     admin_fed_instance_type: Nonevalue.admin_fed_instance_type.unwrap_or_default()), */
             };
             todo!()
         }
     }
     /* #endregion */
-
     /*#region TryFrom */
     //impl TryFrom<IdpListResponse> for Vec<IdpPartner> {}
     /* #endregion */
+    let (grpc, _notimplemented) = setting();
 
-    todo!()
+    let created: IdpPartnerPrt = idp.try_into().unwrap();
+
+    /* let created = IdpPartnerPrt {
+        partner_name: Some(String::from("value")),
+        //metadata_b64: _bytes,
+        ..Default::default()
+    }; */
+
+    impl Into<IdpPartnerPrt> for IdpPartner {
+        fn into(self) -> IdpPartnerPrt {
+            IdpPartnerPrt {
+                partner_name: self.partner_name,
+                metadata_b64: self.metadata_b64,
+                ..Default::default() // conversion logic here
+                                     // todo!()
+            }
+        }
+    }
+
+    let idp_partner = match restrequest_client::RestrequestClient::connect(grpc).await {
+        Ok(mut client) => {
+            println!("grpc call");
+
+            let resp = client.idp_create(created).await?.into_inner();
+            let resp: IdpPartner = resp.try_into().unwrap();
+            vec![resp]
+        }
+        Err(_) => {
+            todo!()
+        }
+    };
+    Ok(idp_partner)
 }
 
 #[server]
@@ -168,15 +211,7 @@ pub async fn grpc_connector_oidc(
     }
     /* #endregion */
 
-    /*#region settings */
-    use crate::settings;
-    use settings::Settings;
-    let settings = Settings::new().unwrap();
-    let grpc = format!(
-        "{}://{}:{}",
-        settings.grpc.scheme, settings.grpc.server, settings.grpc.port
-    );
-    /*#endregion */
+    let (grpc, _notimplemented) = setting();
 
     match gr {
         GrpcRequest::Create => {
@@ -189,7 +224,7 @@ pub async fn grpc_connector_oidc(
         }
     }
 
-    let oo = match restrequest_client::RestrequestClient::connect(grpc).await {
+    let oidc_clients = match restrequest_client::RestrequestClient::connect(grpc).await {
         Ok(mut client) => {
             println!("grpc call");
             let request = ViewRequest {
@@ -248,5 +283,5 @@ pub async fn grpc_connector_oidc(
             vec![example_oidc_client.clone(), nn]
         }
     };
-    Ok(oo)
+    Ok(oidc_clients)
 }

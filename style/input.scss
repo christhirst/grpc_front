@@ -1,0 +1,10 @@
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Adds space between form groups */
+  }
+  
+  .form-group {
+    display: flex;
+    flex-direction: column;
+  }

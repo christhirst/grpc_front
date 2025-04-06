@@ -13,6 +13,27 @@ use crate::grpc::types_oidc::ComponentRedirectURI;
 use crate::grpc::types_oidc::{Attributes, OidcClient};
 
 #[component]
+pub fn butt(
+    tt: WriteSignal<i32>,
+    async_data: Resource<Result<Vec<OidcClient>, ServerFnError>>,
+    data: Store<Data>,
+) -> impl IntoView {
+    view! {
+        <div>
+        <button on:click=move |_| {
+            *tt.write() += 1;
+               let pp = async_data.get().unwrap().unwrap();
+               //_or(Ok(t1.clone())).unwrap_or_default();
+
+               data.set(Data { rows: pp });
+           }>
+               "Update OIDC Clients"
+           </button>
+        </div>
+    }
+}
+
+#[component]
 pub fn Oidc() -> impl IntoView {
     let _rq = GrpcRequest::List;
     let (_count, _set_count) = signal(0);
@@ -27,11 +48,6 @@ pub fn Oidc() -> impl IntoView {
         },
     );
 
-    /* let tt = vec![OidcClient {
-        id: String::from("11"),
-        ..Default::default()
-    }]; */
-
     let t1 = vec![OidcClient {
         id: String::from("222"),
         attributes: Some(vec![Attributes {
@@ -42,137 +58,110 @@ pub fn Oidc() -> impl IntoView {
         ..Default::default()
     }];
 
-    //let pp = async_data.get().unwrap_or(Ok(u.clone())).unwrap_or(u);
-
-    /*  let async_result = move || {
-        async_data
-            .get()
-            .or_else(|| Some(Ok(String::from("value"))))
-            .map(|value| format!("Server returned {value:?}"))
-            // This loading state will only show before the first load
-            .unwrap_or_else(|| "Loading...".into())
-    }; */
-
-    //let oo = get(todo!()).await;
-    // instead of a single with the rows, we create a store for Data
-    /* let data = Store::new(Data {
-           rows: async_data.get().unwrap_or(Ok(tt.clone())).unwrap(),
-       });
-    */
     let data = Store::new(Data { rows: t1.clone() });
 
     view! {
 
-           <h1>OIDC</h1>
-          // {println!("test")}
-           <button on:click=move |_| {
-            *tt.write() += 1;
-               let pp = async_data.get().unwrap().unwrap();
-               //_or(Ok(t1.clone())).unwrap_or_default();
+        <h1>OIDC</h1>
+       // {println!("test")}
+       //<butt/>
+        <button on:click=move |_| {
+         *tt.write() += 1;
+            let pp = async_data.get().unwrap().unwrap();
+            //_or(Ok(t1.clone())).unwrap_or_default();
 
-               data.set(Data { rows: pp });
-           }>
-               "Update OIDC Clients"
-           </button>
+            data.set(Data { rows: pp });
+        }>
+            "Update OIDC Clients"
+        </button>
 
-           /* <Suspense
-           fallback=move || view! { <p>"Loading..."</p> }
-       >
-    {
-        match async_data.get(){
-        Some(s)=>{
-        println!("{s:?}");
-        println!("--------")
-    },
-        None=>print!("2"),
-    }
-    }
-    </Suspense> */
+        //<butt tt=tt async_data=async_data data=data/>
 
 
-           <h1>"My Data"</h1>
 
-           <Suspense
-               fallback=move || view! { <p>"Loading..."</p> }
-           >
-           <For
-           each=move || data.rows().clone().get().clone()
-           key=|state| state.clone().id.clone()
-           children=move |child| {
-               view! {
-                   <!DOCTYPE html>
-                   //<p>{move || child.id().get()}</p>
-                   //<p>{move || child.title().get()}</p>
-                   <div class="card">
-                   <div class="card-content">
-                   <table><tbody>
-                   <tr><th>Name</th>
-                       <th>{move || child.name.clone()}</th>
-                   </tr>
-                   <tr>
-                       <th>Description</th>
-                       <th>{move || child.description.clone()}</th>
-                   </tr>
-                   <tr>
-                   <th>Id_domain</th>
-                   <th>{move || child.id_domain.clone()}</th>
+        <h1>"My Data"</h1>
+
+        <Suspense
+            fallback=move || view! { <p>"Loading..."</p> }
+        >
+        <For
+        each=move || data.rows().clone().get().clone()
+        key=|state| state.clone().id.clone()
+        children=move |child| {
+            view! {
+                <!DOCTYPE html>
+                //<p>{move || child.id().get()}</p>
+                //<p>{move || child.title().get()}</p>
+                <div class="card">
+                <div class="card-content">
+                <table><tbody>
+                <tr><th>Name</th>
+                    <th>{move || child.name.clone()}</th>
                 </tr>
-
                 <tr>
-                   <th>Id</th>
-                   <th>{move || child.id.clone()}</th>
+                    <th>Description</th>
+                    <th>{move || child.description.clone()}</th>
                 </tr>
+                <tr>
+                <th>Id_domain</th>
+                <th>{move || child.id_domain.clone()}</th>
+             </tr>
 
+             <tr>
+                <th>Id</th>
+                <th>{move || child.id.clone()}</th>
+             </tr>
+
+
+            <tr>
+             <th>ComponentClientType</th>
+             <th>child.client_type.clone()</th>
+            </tr>
 
                <tr>
-                <th>ComponentClientType</th>
-                <th>child.client_type.clone()</th>
+              <th>Scopes</th>
+              <th> {move || child.scopes.clone().into_iter()
+                .map(|n| view! { <p>{n} </p>})
+                .collect::<Vec<_>>()}</th>
                </tr>
 
-                  <tr>
-                 <th>Scopes</th>
-                 <th> {move || child.scopes.clone().into_iter()
-                   .map(|n| view! { <p>{n} </p>})
-                   .collect::<Vec<_>>()}</th>
-                  </tr>
+               <tr>
+             <th>Default_scope</th>
+             <th> {move || child.default_scope.clone().into_iter()
+                .map(|n| view! {<p>{n} </p>})
+                .collect::<Vec<_>>()} </th>
+              </tr>
 
-                  <tr>
-                <th>Default_scope</th>
-                <th> {move || child.default_scope.clone().into_iter()
-                   .map(|n| view! {<p>{n} </p>})
-                   .collect::<Vec<_>>()} </th>
-                 </tr>
+              <tr>
+             <th>Use_pkce</th>
+             <th>child.use_pkce.clone()</th>
+              </tr>
 
-                 <tr>
-                <th>Use_pkce</th>
-                <th>child.use_pkce.clone()</th>
-                 </tr>
+              <tr>
+              <th>Redirect_uris</th>
+              <th>{move || child.redirect_uris.clone().into_iter()
+                .map(|n| view! { <p><ComponentRedirectURI s={n}/> </p>})
+                .collect::<Vec<_>>()} </th>
+               </tr>
 
-                 <tr>
-                 <th>Redirect_uris</th>
-                 <th>{move || child.redirect_uris.clone().into_iter()
-                   .map(|n| view! { <p><ComponentRedirectURI s={n}/> </p>})
-                   .collect::<Vec<_>>()} </th>
-                  </tr>
+               <tr>
+              <th>Attributes</th>
+              <th>{move || child.attributes.clone().unwrap_or_default().into_iter()
+              .map(|n| view! { <p>{n.attr_name} </p>})
+              .collect::<Vec<_>>()} </th>
+               </tr>
 
-                  <tr>
-                 <th>Attributes</th>
-                 <th>{move || child.attributes.clone().unwrap_or_default().into_iter()
-                 .map(|n| view! { <p>{n.attr_name} </p>})
-                 .collect::<Vec<_>>()} </th>
-                  </tr>
+              </tbody>
+                </table>
 
-                 </tbody>
-                   </table>
+                </div>
+              </div>
+             }
+        }
+    />
 
-                   </div>
-                 </div>
-                }
-           }
-       />
-
-           </Suspense>
-       }
+        </Suspense>
+    }
 }
 
 /* #[component]

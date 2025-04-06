@@ -5,17 +5,11 @@ use leptos_router::{
     StaticSegment,
 };
 
-use server_fn::{
-    //client::{browser::BrowserClient, Client},
-    codec::{MultipartData, MultipartFormData},
-};
 use tracing::info;
-use wasm_bindgen::JsCast;
-use web_sys::{FormData, HtmlFormElement, SubmitEvent};
 
+use crate::list::api::get;
+use crate::routes::oidc::view::Oidc;
 use crate::routes::saml::view::ListMeta;
-use crate::{grpc::init::grpc_connector_oidc, routes::oidc::view::Oidc};
-use crate::{grpc::init::GrpcRequest, list::api::get};
 
 #[component]
 pub fn App() -> impl IntoView {
@@ -89,7 +83,7 @@ pub fn shell(options: LeptosOptions) -> impl IntoView {
     }
 }
 
-#[component]
+/* #[component]
 pub fn FormExample() -> impl IntoView {
     println!("{:?}", "data1");
     // reactive access to URL query strings
@@ -166,7 +160,7 @@ pub fn FormExample() -> impl IntoView {
 
     </p>
     }
-}
+} */
 
 /// Renders the home page of your application.
 #[component]
@@ -179,7 +173,7 @@ fn HomePage() -> impl IntoView {
     view! {
 
     <h1>Home</h1>
-    <FormExample/>
+    //<FormExample/>
     //<Upload/>
     //<BusyButton/>
             //<button on:click=on_click>"Click Me: " {count}{rr}</button>

@@ -53,33 +53,33 @@ message SPListResponse {
 }
 
 message IdpPartnerPrt {
-   bytes metadataB64 = 1;
-   string metadataURL = 2;
-   string partnerType = 3;
-   string tenantName = 4;
-   string tenantURL = 5;
-   string partnerName = 6;
-   string nameIDFormat = 7;
-   string ssoProfile = 8;
-   string attributeLDAP = 9;
-   string attributeSAML = 10;
-   string faWelcomePage = 11;
-   string generateNewKeys = 12;
-   string validityNewKeys = 13;
-   bool preverify = 14;
-   string providerID = 15;
-   string ssoURL = 16;
-   string ssoSOAPURL = 17;
-   string logoutRequestURL = 18;
-   string logoutResponseURL = 19;
-   string assertionConsumerURL = 20;
-   string succinctID = 21;
-   string signingCert = 22;
-   string encryptionCert = 23;
-   string signatureDigestAlgorithm = 24;
-   string signingKeystoreAccessTemplateId = 25;
-   string encryptionKeystoreAccessTemplateId = 26;
-   string adminFedInstanceType = 27;
+   optional bytes metadataB64 = 1;
+   optional string metadataURL = 2;
+   optional string partnerType = 3;
+   optional string tenantName = 4;
+   optional string tenantURL = 5;
+   optional string partnerName = 6;
+   optional string nameIDFormat = 7;
+   optional string ssoProfile = 8;
+   optional string attributeLDAP = 9;
+   optional string attributeSAML = 10;
+   optional string faWelcomePage = 11;
+   optional string generateNewKeys = 12;
+   optional string validityNewKeys = 13;
+   optional bool preverify = 14;
+   optional string providerID = 15;
+   optional string ssoURL = 16;
+   optional string ssoSOAPURL = 17;
+   optional string logoutRequestURL = 18;
+   optional string logoutResponseURL = 19;
+   optional string assertionConsumerURL = 20;
+   optional string succinctID = 21;
+   optional string signingCert = 22;
+   optional string encryptionCert = 23;
+   optional string signatureDigestAlgorithm = 24;
+   optional string signingKeystoreAccessTemplateId = 25;
+   optional string encryptionKeystoreAccessTemplateId = 26;
+   optional string adminFedInstanceType = 27;
 }
 
 message SpPartnerPrt {
