@@ -1,3 +1,4 @@
+use leptos::config::LeptosOptions;
 use settings::Settings;
 pub mod settings;
 //use backend::{IdpRequest, IdpResponse};
@@ -5,12 +6,29 @@ pub mod settings;
 
 //use backend::restapi_client;
 
+use axum::extract::FromRef;
+
 #[derive(Debug, Default)]
 pub struct RestService;
+
+#[derive(FromRef, Debug, Clone)]
+pub struct MyData {
+    pub value: usize,
+    pub leptos_options: LeptosOptions,
+}
 
 #[cfg(feature = "ssr")]
 #[tokio::main]
 async fn main() {
+    //This Defaults as normal Cookies.
+    //To enable Private cookies for integrity, and authenticity please check the next Example.
+    let session_config = SessionConfig::default().with_table_name("sessions_table");
+
+    // create SessionStore and initiate the database tables
+    let session_store = SessionStore::<SessionNullPool>::new(None, session_config)
+        .await
+        .unwrap();
+
     // construct a subscriber that prints formatted traces to stdout
 
     let subscriber = tracing_subscriber::fmt()
@@ -40,6 +58,7 @@ async fn main() {
     .await
     .unwrap(); */
     use axum::Router;
+    use axum_session::{SessionConfig, SessionLayer, SessionNullPool, SessionStore};
     use grpc_front::app::*;
     use leptos::logging::log;
     use leptos::prelude::*;
@@ -53,12 +72,18 @@ async fn main() {
     // Generate the list of routes in your Leptos App
     let routes = generate_route_list(App);
 
+    /* let app_state = MyData {
+           value: 42,
+           //leptos_options,
+       };
+    */
     let app = Router::new()
+        .layer(SessionLayer::new(session_store))
         .leptos_routes(&leptos_options, routes, {
             let leptos_options = leptos_options.clone();
             move || shell(leptos_options.clone())
         })
-        .fallback(leptos_axum::file_and_error_handler(shell))
+        //.fallback(leptos_axum::file_and_error_handler(shell))
         .with_state(leptos_options);
 
     // run our app with hyper

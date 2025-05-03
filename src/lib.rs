@@ -1,8 +1,10 @@
 pub mod app;
 pub mod components;
+pub mod db;
 pub mod grpc;
 pub mod list;
 //pub mod settings;
+mod oidc;
 mod routes;
 pub mod settings;
 

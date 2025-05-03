@@ -2,38 +2,47 @@ use leptos::{prelude::*, task::spawn_local};
 use leptos_meta::{provide_meta_context, MetaTags, Stylesheet, Title};
 use leptos_router::{
     components::{Route, Router, Routes},
+    hooks::{use_params_map, use_query_map},
     StaticSegment,
 };
 
+use serde::{Deserialize, Serialize};
 use tracing::info;
 
-use crate::list::api::get;
-use crate::routes::oidc::view::Oidc;
 use crate::routes::saml::view::ListMeta;
+use crate::{list::api::get, oidc::login};
+use crate::{oidc::authorize, routes::oidc::view::Oidc};
 
 #[component]
 pub fn App() -> impl IntoView {
     // Provides context that manages stylesheets, titles, meta tags, etc.
     provide_meta_context();
+    let (toggled, set_toggled) = signal(String::from("false"));
 
+    // share `set_toggled` with all children of this component
+    provide_context(set_toggled);
+    provide_context(toggled);
     view! {
         // injects a stylesheet into the document <head>
         // id=leptos means cargo-leptos will hot-reload this stylesheet
         <Stylesheet id="leptos" href="/pkg/grpc_front.css"/>
 
         // sets the document title
-        <Title text="Welcome to Leptos"/>
+        <Title text="Welcome"/>
 
         // content for this welcome page
         <Router>
             //<main>
             <NavBar/>
-            <h1>"Welcome to Leptos!"</h1>
+            <h1>"Welcome!"</h1>
+            <p>"Toggled? " {toggled}</p>
                 <Routes fallback=|| "Page not found..".into_view()>
                     <Route path=StaticSegment("/") view=HomePage/>
                     <Route path=StaticSegment("/metadata") view=ListMeta/>
                     <Route path=StaticSegment("/oidc") view=Oidc/>
-                    <Route path=StaticSegment("/rs") view=Oidc/>
+                    <Route path=StaticSegment("/rs") view=ResourceServer/>
+                    <Route path=StaticSegment("/login") view=Login/>
+                    <Route path=StaticSegment("/authorize") view=Authorize/>
                 </Routes>
 
 
@@ -45,6 +54,77 @@ pub fn App() -> impl IntoView {
 //TODO route1: metadata: Import from file, Import from api, clean, list, git,
 //TODO route2: OIDC, list, detail view, add, resource server, template userinfo
 //TODO userinfo
+//TODO Discovery openid connect
+//TODO CSR: Login BUTTON; Redirect to OIDC, Redirect to Client
+//TODO SSR: Request to token endpoint, Request to userinfo endpoint
+
+#[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
+pub struct MyState {
+    name: String,
+    age: u32,
+}
+
+#[component]
+fn Login() -> impl IntoView {
+    // Binds a struct:
+
+    //let http_client = reqwest::blocking::ClientBuilder::new();
+    let query = use_query_map();
+    info!("{:?}", query);
+    //let setter = use_context::<WriteSignal<String>>().expect("to have found the setter provided");
+    //let (state, set_state, _) = use_session_storage::<i32, JsonSerdeCodec>("my-state");
+
+    view! {
+
+    <h1>Login</h1>
+
+    <button on:click=move |_| {
+        //let setter_clone = setter.clone();
+        spawn_local(async move {
+            let oo = login().await.unwrap();
+           //*set_state.write() = 2;
+            //setter_clone.update(|value| *value = oo);
+        });
+    }>
+        "Add Todo"
+    </button>
+        }
+}
+
+#[component]
+fn Authorize() -> impl IntoView {
+    //let http_client = reqwest::blocking::ClientBuilder::new();
+    let query = use_query_map();
+    info!("{:?}", query);
+    //let params = use_params_map().read();
+    /* let query = use_query_map()
+    .read()
+    .get("code")
+    .unwrap_or_default()
+    .to_string(); */
+    /* info!("{:?}", query);
+    info!("{:?}", params); */
+    //let setter = use_context::<WriteSignal<bool>>().expect("to have found the setter provided");
+    /* let zz = use_context::<ReadSignal<String>>().expect("to have found the setter provided");
+    info!("pkce {:?}", zz.get().to_string()); */
+    view! {
+        <div>
+        /* <button
+            on:click=move |_| setter.update(|value| *value = !*value)
+        >
+            "Toggle"
+        </button> */
+        <button on:click=move |_| {
+            //let query_clone = query.clone();
+            spawn_local(async move {
+                authorize().await.unwrap();
+            });
+        }>
+            "Add Todo"
+        </button>
+        </div>
+    }
+}
 
 #[component]
 pub fn BusyButton() -> impl IntoView {
@@ -218,6 +298,9 @@ fn NavBar() -> impl IntoView {
                 </li>
                 <li>
                     <a href="/rs">ResourceServer</a>
+                </li>
+                <li>
+                    <a href="/login">Login</a>
                 </li>
             </ul>
         </nav>
